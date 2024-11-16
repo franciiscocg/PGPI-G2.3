@@ -12,6 +12,7 @@ class EstadoPedido(models.TextChoices):
 class Pedido(models.Model):
     email = models.EmailField(max_length=255)
     importe = models.DecimalField(max_digits=10, decimal_places=2)
+    direccion = models.TextField()
     estado = models.CharField(
         max_length=2,
         choices=EstadoPedido.choices,
