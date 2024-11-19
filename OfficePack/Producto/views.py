@@ -15,12 +15,12 @@ def crear_producto(request):
     return render(request, 'crear_producto.html', {'form': form})
 
 
-def listar_producto(request):
+def listar_productos(request):
     pedidos = Producto.objects.all()
     return render(request, 'listar_productos.html', {'pedido': pedidos})
 
 
-def listar_productos(request, id):
+def listar_producto(request, id):
     pedido = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=pedido)
