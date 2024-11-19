@@ -21,3 +21,6 @@ Thumbs.db
 # Archivos de cobertura de código
 .coverage
 *.cover
+
+# Base de datos en desarrollo
+db.sqlite3
