@@ -33,6 +33,7 @@ urlpatterns = [
     path('añadir/<int:producto_id>/', viewsPedido.añadir_a_cesta, name='añadir_a_cesta'),
     path('cesta/', viewsPedido.ver_cesta, name='ver_cesta'),
     path('realizar_pedido/', viewsPedido.realizar_pedido, name='realizar_pedido'),
+    path('eliminar_de_cesta/<int:producto_id>/', viewsPedido.eliminar_de_cesta, name='eliminar_de_cesta'),
     
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
     path('crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
