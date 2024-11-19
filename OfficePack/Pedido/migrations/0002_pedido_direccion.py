@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pedido',
             name='direccion',
-            field=models.CharField(max_length=200, null=True),
+            field=models.CharField(default='', max_length=200),
         ),
     ]
