@@ -16,8 +16,8 @@ def crear_producto(request):
 
 
 def listar_productos(request):
-    pedidos = Producto.objects.all()
-    return render(request, 'listar_productos.html', {'pedido': pedidos})
+    productos = Producto.objects.all()
+    return render(request, 'listar_productos.html', {'productos': productos})
 
 
 def listar_producto(request, id):
@@ -45,8 +45,8 @@ def actualizar_producto(request, id):
 
 
 def eliminar_producto(request, id):
-    pedido = get_object_or_404(Producto, id=id)
+    producto = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
-        pedido.delete()
-        return redirect('listar_pedidos')
-    return render(request, 'eliminar_producto.html', {'producto': pedido})
+        producto.delete()
+        return redirect('listar_productos')
+    return render(request, 'eliminar_producto.html', {'producto': producto})

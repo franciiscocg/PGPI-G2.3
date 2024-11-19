@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>Cesta de la Compra</h1>
 <table>
     <thead>
@@ -23,3 +25,4 @@
 </table>
 <h3>Total: {{ total }}</h3>
 <a href="{% url 'realizar_pedido' %}">Realizar Pedido</a>
+{% endblock content %}
