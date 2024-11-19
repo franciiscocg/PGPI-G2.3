@@ -19,10 +19,13 @@
             <td>{{ item.cantidad }}</td>
             <td>{{ item.precio }}</td>
             <td>{{ item.cantidad|multiply:item.precio }}</td>
+            <td><a href="{% url 'eliminar_de_cesta' producto_id %}">Eliminar</a></td>
+            
         </tr>
         {% endfor %}
     </tbody>
 </table>
 <h3>Total: {{ total }}</h3>
+
 <a href="{% url 'realizar_pedido' %}">Realizar Pedido</a>
 {% endblock content %}

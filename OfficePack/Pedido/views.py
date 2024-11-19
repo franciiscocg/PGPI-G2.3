@@ -77,6 +77,14 @@ def ver_cesta(request):
     return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': total})
 
 
+def eliminar_de_cesta(request, producto_id):
+    cesta = request.session.get('cesta', {})
+    if str(producto_id) in cesta:
+        del cesta[str(producto_id)]
+        request.session.modified = True
+    return redirect('ver_cesta')
+
+
 @login_required(login_url='/accounts/login/')
 def realizar_pedido(request):
     cesta = request.session.get('cesta', {})
@@ -92,7 +100,7 @@ def realizar_pedido(request):
         producto = Producto.objects.get(id=producto_id)
         cantidad_almacen = item['cantidad']
         precio_unitario = producto.precio
-        total += precio_unitario * cantidad_almacen
+        total += precio_unitario
 
         ProductoPedido.objects.create(pedido=pedido, producto=producto, cantidad=cantidad_almacen, precio_unitario=precio_unitario)
 
