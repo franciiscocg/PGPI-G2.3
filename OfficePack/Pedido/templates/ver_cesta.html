@@ -1,0 +1,25 @@
+<h1>Cesta de la Compra</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto_id, item in cesta.items %}
+        <tr>
+            {% load custom_filters %}
+
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.precio }}</td>
+            <td>{{ item.cantidad|multiply:item.precio }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>Total: {{ total }}</h3>
+<a href="{% url 'realizar_pedido' %}">Realizar Pedido</a>
