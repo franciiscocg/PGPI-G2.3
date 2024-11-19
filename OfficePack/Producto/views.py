@@ -32,6 +32,18 @@ def listar_productos(request, id):
     return render(request, 'actualizar_producto.html', {'form': form})
 
 
+def actualizar_producto(request, id):
+    pedido = get_object_or_404(Producto, id=id)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, instance=pedido)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_productos')
+    else:
+        form = ProductoForm(instance=pedido)
+    return render(request, 'actualizar_producto.html', {'form': form})
+
+
 def eliminar_producto(request, id):
     pedido = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
