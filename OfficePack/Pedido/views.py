@@ -12,7 +12,7 @@ def crear_pedido(request):
         form = PedidoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_pedidos') 
+            return redirect('listar_pedidos')
     else:
         form = PedidoForm()
     return render(request, 'crear_pedido.html', {'form': form})
@@ -49,7 +49,7 @@ def eliminar_pedido(request, pk):
 @login_required
 def añadir_a_cesta(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
-    
+
     # Verificar si ya existe una cesta activa
     if 'cesta' not in request.session:
         request.session['cesta'] = {}
@@ -84,7 +84,6 @@ def realizar_pedido(request):
 
     # Crear un nuevo pedido
     pedido = Pedido.objects.create(usuario=request.user, importe=0)
-    
     # Añadir los productos a la tabla de ItemPedido
     total = 0
     for producto_id, item in cesta.items():
@@ -102,5 +101,4 @@ def realizar_pedido(request):
     # Vaciar la cesta
     request.session['cesta'] = {}
     request.session.modified = True
-    
     return render(request, 'pedido_confirmado.html', {'pedido': pedido})

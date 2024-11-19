@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de {{ user.username }}</title>
+</head>
+<body>
+
+    <header>
+        <h1>Bienvenido, {{ user.username }}</h1>
+    </header>
+
+    <section>
+        <h2>Detalles del Perfil</h2>
+        <ul>
+            <li><strong>Nombre completo:</strong> {{ user.get_full_name }}</li>
+            <li><strong>Correo electrónico:</strong> {{ user.email }}</li>
+            <li><strong>Fecha de creación de cuenta:</strong> {{ user.date_joined }}</li>
+            <li><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
+        </ul>
+
+        <p><form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Cerrar sesión</button>
+        </form></p>
+    </section>
+
+</body>
+</html>

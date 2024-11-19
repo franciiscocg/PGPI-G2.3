@@ -20,7 +20,6 @@ class Pedido(models.Model):
         choices=EstadoPedido.choices,
         default=EstadoPedido.PENDIENTE
     )
-    
 
     def __str__(self):
         return f'Pedido {self.id} - {self.email}'
