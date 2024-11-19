@@ -43,6 +43,7 @@ def eliminar_pedido(request, pk):
     return render(request, 'eliminar_pedido.html', {'pedido': pedido})
 
 
+
 # Operaciones con la cesta
 
 
@@ -104,3 +105,4 @@ def realizar_pedido(request):
     request.session.modified = True
     
     return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+
