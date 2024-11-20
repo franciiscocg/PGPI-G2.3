@@ -47,34 +47,43 @@ def eliminar_pedido(request, pk):
 # Operaciones con la cesta
 
 
-@login_required
+@login_required(login_url='/login/')
 def añadir_a_cesta(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
 
-    # Verificar si ya existe una cesta activa
+    # Se verifica si ya existe una cesta activa
     if 'cesta' not in request.session:
         request.session['cesta'] = {}
 
     cesta = request.session['cesta']
 
-    # Si el producto ya está en la cesta, aumentamos la cantidad
-    if str(producto_id) in cesta:
-        cesta[str(producto_id)]['cantidad'] += 1
+    # Se verifica si el stock es suficiente para añadir el producto
+    if producto.cantidad_almacen > 0:
+        # Si el producto ya está en la cesta, se aumentta la cantidad si hay stock suficiente
+        if str(producto_id) in cesta:
+            if cesta[str(producto_id)]['cantidad'] < producto.cantidad_almacen:
+                cesta[str(producto_id)]['cantidad'] += 1
+            else:
+                # Si el stock es insuficiente, muestra un mensaje
+                return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para añadir más de este producto.'})
+        else:
+            cesta[str(producto_id)] = {
+                'nombre': producto.nombre,
+                'precio': float(producto.precio),
+                'cantidad': 1
+            }
+        request.session.modified = True  # Indicamos que la sesión ha sido modificada
     else:
-        cesta[str(producto_id)] = {
-            'nombre': producto.nombre,
-            'precio': str(producto.precio),
-            'cantidad': 1
-        }
+        # Si el producto no tiene stock, muestra un mensaje
+        return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
 
-    request.session.modified = True  # Indicamos que la sesión ha sido modificada
     return redirect('ver_cesta')
 
 
 def ver_cesta(request):
     cesta = request.session.get('cesta', {})
-    total = sum(float(item['precio']) * item['cantidad'] for item in cesta.values())
-    return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': total})
+    total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
+    return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': round(total, 2)})
 
 
 def eliminar_de_cesta(request, producto_id):
@@ -85,30 +94,41 @@ def eliminar_de_cesta(request, producto_id):
     return redirect('ver_cesta')
 
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/login/')
 def realizar_pedido(request):
     cesta = request.session.get('cesta', {})
     if not cesta:
         return redirect('ver_cesta')  # Si la cesta está vacía, redirige al carrito
 
-    # Crear un nuevo pedido
+    # Se crea un nuevo pedido
     pedido = Pedido.objects.create(usuario=request.user, importe=0)
-    # Añadir los productos a la tabla de ItemPedido
-    total = 0
+    
+    total = 0  # Se inicia el total
     for producto_id, item in cesta.items():
         producto = Producto.objects.get(id=producto_id)
         cantidad_almacen = item['cantidad']
-        precio_unitario = producto.precio
-        total += precio_unitario
+        precio_unitario = item['precio']
+        subtotal = precio_unitario * cantidad_almacen
+        total += subtotal  # Sumar el subtotal del producto al total
 
+        # Se verifica si hay suficiente stock
+        if producto.cantidad_almacen < cantidad_almacen:
+            return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para completar tu pedido.'})
+
+        # Se crean los registros en la tabla de productos del pedido
         ProductoPedido.objects.create(pedido=pedido, producto=producto, cantidad=cantidad_almacen, precio_unitario=precio_unitario)
 
-    # Actualizar el total del pedido
+        # Se actualiza el stock del producto
+        producto.cantidad_almacen -= cantidad_almacen
+        producto.save()
+
+    # Se actualiza el total del pedido
     pedido.total = total
     pedido.save()
 
-    # Vaciar la cesta
+    # Se vacia la cesta
     request.session['cesta'] = {}
     request.session.modified = True
+
     return render(request, 'pedido_confirmado.html', {'pedido': pedido})
 
