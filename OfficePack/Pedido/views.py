@@ -43,6 +43,7 @@ def eliminar_pedido(request, pk):
     return render(request, 'eliminar_pedido.html', {'pedido': pedido})
 
 
+
 # Operaciones con la cesta
 
 
@@ -76,6 +77,14 @@ def ver_cesta(request):
     return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': total})
 
 
+def eliminar_de_cesta(request, producto_id):
+    cesta = request.session.get('cesta', {})
+    if str(producto_id) in cesta:
+        del cesta[str(producto_id)]
+        request.session.modified = True
+    return redirect('ver_cesta')
+
+
 @login_required(login_url='/accounts/login/')
 def realizar_pedido(request):
     cesta = request.session.get('cesta', {})
@@ -90,7 +99,7 @@ def realizar_pedido(request):
         producto = Producto.objects.get(id=producto_id)
         cantidad_almacen = item['cantidad']
         precio_unitario = producto.precio
-        total += precio_unitario * cantidad_almacen
+        total += precio_unitario
 
         ProductoPedido.objects.create(pedido=pedido, producto=producto, cantidad=cantidad_almacen, precio_unitario=precio_unitario)
 
@@ -102,3 +111,4 @@ def realizar_pedido(request):
     request.session['cesta'] = {}
     request.session.modified = True
     return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+

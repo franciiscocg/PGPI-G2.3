@@ -1,23 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Taskmate{% endblock title %}</title>
+    <title>OfficePack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            background-image: url('https://via.placeholder.com/1920x600');
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin: 0;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+        .section {
+            padding: 2rem;
+            text-align: center;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .product {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: left;
+        }
+        .product img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        {% if user.is_authenticated %}
-            <p>Welcome, {{ user.username }}!</p>
-            <form action="{% url 'logout' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Log out</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
-        {% endif %}
-    </nav>
-    {% block content %}{% endblock content %}
-</body>
-</html>
+    <header>
+        <div class="logo">OfficePack</div>
+        <nav>
+
+            <a href="/">Home</a>
+
+            <a href="/catalogo">Catálogo</a>
+            <a href="/cesta">Cesta</a>
+
+            <a href="/crear_producto">Crear producto</a>
+            <a href="/actualizar_producto/1">Actualizar Producto</a>
+            <a href="/eliminar_producto/1">Eliminar Producto</a>           
+            
+
+            {% if user.is_authenticated %}
+            <a href="/logout">Logout</a>
+            {% else %}
+            <a href="/register">Registrarse</a>
+            <a href="/login">Login</a>
+            {% endif %}
+
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock content %}
+    

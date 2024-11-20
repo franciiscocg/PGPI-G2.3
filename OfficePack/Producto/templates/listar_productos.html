@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <h1>Lista de Productos</h1>
+    <ul>
+        {% for producto in productos %}
+            <li>
+                {{ producto.nombre }} - {{ producto.precio }}
+                <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Añadir a la cesta</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+{% endblock content %}
