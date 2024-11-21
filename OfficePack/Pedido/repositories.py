@@ -24,3 +24,4 @@ class PedidoManager(models.Manager):
             pedido.delete()
         except Exception as e:
             print(e)
+            

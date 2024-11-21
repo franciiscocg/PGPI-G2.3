@@ -1,10 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
+
 from .forms import PedidoForm
 from .models import Pedido
+
 from Producto.models import Producto
 from Producto_pedido.models import ProductoPedido
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.conf import settings
+
+import stripe
+
+stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 
 def crear_pedido(request):
@@ -94,41 +102,55 @@ def eliminar_de_cesta(request, producto_id):
     return redirect('ver_cesta')
 
 
-@login_required(login_url='/login/')
-def realizar_pedido(request):
+#Operaciones de pago
+
+def pagar(request):
+    # Total de la cesta
     cesta = request.session.get('cesta', {})
-    if not cesta:
-        return redirect('ver_cesta')  # Si la cesta está vacía, redirige al carrito
+    total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
-    # Se crea un nuevo pedido
-    pedido = Pedido.objects.create(usuario=request.user, importe=0)
-    
-    total = 0  # Se inicia el total
-    for producto_id, item in cesta.items():
-        producto = Producto.objects.get(id=producto_id)
-        cantidad_almacen = item['cantidad']
-        precio_unitario = item['precio']
-        subtotal = precio_unitario * cantidad_almacen
-        total += subtotal  # Sumar el subtotal del producto al total
+    # PaymentIntent con el total de la cesta
+    intent = stripe.PaymentIntent.create(
+        amount=int(total * 100),  # Cantidad en centavos
+        currency='eur',
+    )
 
-        # Se verifica si hay suficiente stock
-        if producto.cantidad_almacen < cantidad_almacen:
-            return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para completar tu pedido.'})
+    # Se pasa la clave pública de Stripe y el client secret al html de pagar
+    return render(request, 'pagar.html', {
+        'stripe_public_key': settings.STRIPE_TEST_PUBLIC_KEY,
+        'client_secret': intent.client_secret,
+    })
 
-        # Se crean los registros en la tabla de productos del pedido
-        ProductoPedido.objects.create(pedido=pedido, producto=producto, cantidad=cantidad_almacen, precio_unitario=precio_unitario)
 
-        # Se actualiza el stock del producto
-        producto.cantidad_almacen -= cantidad_almacen
-        producto.save()
+def confirmar_pago(request):
+    cesta = request.session.get('cesta', {})
+    total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
-    # Se actualiza el total del pedido
-    pedido.total = total
-    pedido.save()
+    if request.method == 'POST':
+        payment_intent_id = request.POST.get('payment_intent_id')
 
-    # Se vacia la cesta
-    request.session['cesta'] = {}
-    request.session.modified = True
+        # Se verifica que el PaymentIntent haya ido bien
+        try:
+            intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+        except stripe.error.StripeError as e:
+            return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
 
-    return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+        if intent.status == 'succeeded':
+            # Crear el pedido
+            pedido = Pedido.objects.create(usuario=request.user, total=total)
+            for producto_id, item in cesta.items():
+                producto = Producto.objects.get(id=producto_id)
+                cantidad = item['cantidad']
+                # Actualizar el stock
+                producto.stock -= cantidad
+                producto.save()
 
+            # Vaciar la cesta
+            request.session['cesta'] = {}
+            request.session.modified = True
+
+            return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+        else:
+            return render(request, 'mensaje_error.html', {'mensaje': 'Hubo un error con tu pago. Intenta nuevamente.'})
+
+    return redirect('ver_cesta')
