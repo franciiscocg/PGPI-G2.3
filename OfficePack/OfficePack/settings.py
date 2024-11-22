@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Pedido',
     'Producto_pedido',
     'users_app',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rabodetorohub@gmail.com'
 EMAIL_HOST_PASSWORD = 'bxzr yzhd qihv zqvz'
 DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
+
+# Certificados SSL
+
+SSL_KEY_PATH = '\OfficePack\certs\mysite.key'
+SECURE_SSL_REDIRECT = False
