@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 
 
 from .forms import PedidoForm
 from .models import Pedido
 
 from Producto.models import Producto
-from Producto_pedido.models import ProductoPedido
 from django.conf import settings
 
 import stripe
@@ -49,7 +47,6 @@ def eliminar_pedido(request, pk):
         pedido.delete()
         return redirect('listar_pedidos')
     return render(request, 'eliminar_pedido.html', {'pedido': pedido})
-
 
 
 # Operaciones con la cesta
@@ -102,7 +99,7 @@ def eliminar_de_cesta(request, producto_id):
     return redirect('ver_cesta')
 
 
-#Operaciones de pago
+# Operaciones de pago
 
 def pagar(request):
     # Total de la cesta

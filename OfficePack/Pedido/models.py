@@ -21,5 +21,6 @@ class Pedido(models.Model):
         default=EstadoPedido.PENDIENTE
     )
 
+
 def __str__(self):
     return f'Pedido {self.id} - {self.email}'
