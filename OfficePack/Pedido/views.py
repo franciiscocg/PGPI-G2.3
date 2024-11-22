@@ -21,9 +21,20 @@ def crear_pedido(request):
     return render(request, 'crear_pedido.html', {'form': form})
 
 
-def listar_pedido(request):
+def listar_pedidos(request):
     pedidos = Pedido.objects.all()
-    return render(request, 'listar_pedido.html', {'pedido': pedidos})
+    return render(request, 'listar_pedidos.html', {'pedido': pedidos})
+
+
+def mostrar_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    return render(request, 'mostrar_pedido.html', {'pedido': pedido})
+
+
+@login_required(login_url='/login/')
+def listar_mis_pedidos(request):
+    pedidos = Pedido.objects.filter(email=request.user.email)
+    return render(request, 'listar_pedidos.html', {'pedidos': pedidos})
 
 
 def actualizar_pedido(request, pk):
@@ -121,6 +132,11 @@ def confirmar_pago(request):
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
     if request.method == 'POST':
+        if request.user.is_authenticated:
+            email = request.user.email
+        else:
+            email = request.POST.get('email')
+        direccion = request.POST.get('direccion')
         payment_intent_id = request.POST.get('payment_intent_id')
 
         # Se verifica que el PaymentIntent haya ido bien
@@ -131,7 +147,7 @@ def confirmar_pago(request):
 
         if intent.status == 'succeeded':
             # Se crea el pedido
-            pedido = Pedido.objects.create(usuario=request.user, importe=total)
+            pedido = Pedido.objects.create(usuario=request.user, importe=total, email=email, direccion=direccion)
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)
                 cantidad = item['cantidad']
@@ -147,7 +163,7 @@ def confirmar_pago(request):
             asunto = 'Confirmación de Pedido'
             mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nGracias por tu compra."
             from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = request.user.email  # El correo del usuario que realizó la compra
+            to_email = email  # El correo del usuario que realizó la compra
 
             try:
                 send_mail(asunto, mensaje, from_email, [to_email])

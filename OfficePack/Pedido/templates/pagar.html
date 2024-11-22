@@ -11,6 +11,18 @@
 
     <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
         {% csrf_token %}
+
+        {% if not request.user.is_authenticated %}
+        <div>
+            <label for="email">Correo Electrónico</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        {% endif %}
+
+        <div>
+            <label for="direccion">Dirección</label>
+            <input type="text" id="direccion" name="direccion" required>
+
         <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
         <button id="submit-button">Pagar</button>
     </form>
@@ -30,12 +42,12 @@
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Realizar la confirmación de pago con Stripe
+            // Se confirma el pago con Stripe
             stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: card,
                     billing_details: {
-                        name: 'Nombre del Cliente'  // Aquí puedes recoger el nombre del cliente si lo deseas
+                        name: 'Nombre del Cliente'  
                     }
                 }
             }).then(function(result) {
@@ -44,14 +56,14 @@
                     alert(result.error.message);
                 } else {
                     if (result.paymentIntent.status === 'succeeded') {
-                        // Si el pago fue exitoso, agregar el payment_intent_id al formulario y enviarlo al servidor
+                        // Si el pago fue exitoso, se agrega el payment_intent_id al formulario y se envia al servidor
                         var paymentIntentIdInput = document.createElement('input');
                         paymentIntentIdInput.type = 'hidden';
                         paymentIntentIdInput.name = 'payment_intent_id';
                         paymentIntentIdInput.value = result.paymentIntent.id;
                         form.appendChild(paymentIntentIdInput);
 
-                        // Ahora enviar el formulario con un POST al backend
+                        // Ahora se envia el formulario con un POST al backend
                         form.submit();
                     }
                 }
