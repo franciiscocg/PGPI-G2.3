@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Pagar Pedido</h1>
+
+    <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
+        {% csrf_token %}
+        <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
+        <button id="submit-button">Pagar</button>
+    </form>
+
+    <script type="text/javascript">
+        var stripe = Stripe("{{ stripe_public_key }}");  // Tu clave pública de Stripe
+        var clientSecret = "{{ client_secret }}";  // El client_secret del PaymentIntent
+
+        var elements = stripe.elements();
+        var card = elements.create('card');  // Crea el campo para la tarjeta de crédito
+
+        // Inserta el campo de tarjeta en el HTML
+        card.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Realizar la confirmación de pago con Stripe
+            stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: 'Nombre del Cliente'  // Aquí puedes recoger el nombre del cliente si lo deseas
+                    }
+                }
+            }).then(function(result) {
+                if (result.error) {
+                    // Muestra un error si la transacción falla
+                    alert(result.error.message);
+                } else {
+                    if (result.paymentIntent.status === 'succeeded') {
+                        // Si el pago fue exitoso, agregar el payment_intent_id al formulario y enviarlo al servidor
+                        var paymentIntentIdInput = document.createElement('input');
+                        paymentIntentIdInput.type = 'hidden';
+                        paymentIntentIdInput.name = 'payment_intent_id';
+                        paymentIntentIdInput.value = result.paymentIntent.id;
+                        form.appendChild(paymentIntentIdInput);
+
+                        // Ahora enviar el formulario con un POST al backend
+                        form.submit();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

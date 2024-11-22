@@ -9,7 +9,7 @@ def crear_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos') 
+            return redirect('listar_productos')
     else:
         form = ProductoForm()
     return render(request, 'crear_producto.html', {'form': form})

@@ -9,4 +9,3 @@ def multiply(value, arg):
         return value * arg
     except (TypeError, ValueError):
         return None
-    

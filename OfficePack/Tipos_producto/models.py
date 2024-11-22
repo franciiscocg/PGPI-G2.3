@@ -4,6 +4,7 @@ from Producto.models import Producto
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 
+
 class Tipo(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
@@ -13,6 +14,7 @@ class Tipo(models.Model):
     image = models.ImageField(upload_to='/tipos',null = True, blank=False)
     def __str__(self):
         return self.title
+    
     
 def set_slug(sender, instance, *args, **kwargs):
     if instance.title and not instance.slug:

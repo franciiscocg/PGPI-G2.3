@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1>Pedido Confirmado</h1>
-<p>Gracias por tu compra, {{ pedido.usuario.username }}. Tu pedido ha sido confirmado.</p>
-<p>Total: {{ pedido.total }}</p>
-{% endblock content %}
+    <div class="container">
+        <h1>¡Pedido Confirmado!</h1>
+        <p>Gracias por tu compra, {{ pedido.usuario.username }}. Tu pedido ha sido confirmado con éxito.</p>
+        
+        <h3>Detalles del Pedido:</h3>
+        <ul>
+            {% for item in pedido.productos.all %}
+                <li>
+                    {% load custom_filters %}
+                    {{ item.producto.nombre }} - {{ item.cantidad }} x {{ item.producto.precio }}€ = {{ item.cantidad|multiply:item.producto.precio }}€
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <p><strong>Total: {{ pedido.importe }}€</strong></p>
+
+        <p>Recibirás un correo electrónico de confirmación en breve.</p>
+        
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+    </div>
+{% endblock %}
