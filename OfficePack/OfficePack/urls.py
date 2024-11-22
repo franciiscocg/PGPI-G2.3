@@ -34,6 +34,7 @@ urlpatterns = [
     path('cesta/', viewsPedido.ver_cesta, name='ver_cesta'),
     path('pagar/', viewsPedido.pagar, name='pagar'),
     path('confirmar_pago/', viewsPedido.confirmar_pago, name='confirmar_pago'),
+    #path('pedido-confirmado/', viewsPedido.confirmar_pago, name='pedido-confirmado'),
     path('eliminar_de_cesta/<int:producto_id>/', viewsPedido.eliminar_de_cesta, name='eliminar_de_cesta'),
     
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),

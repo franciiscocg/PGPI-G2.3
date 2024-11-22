@@ -137,12 +137,12 @@ def confirmar_pago(request):
 
         if intent.status == 'succeeded':
             # Crear el pedido
-            pedido = Pedido.objects.create(usuario=request.user, total=total)
+            pedido = Pedido.objects.create(usuario=request.user, importe=total)
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)
                 cantidad = item['cantidad']
                 # Actualizar el stock
-                producto.stock -= cantidad
+                producto.cantidad_almacen -= cantidad
                 producto.save()
 
             # Vaciar la cesta

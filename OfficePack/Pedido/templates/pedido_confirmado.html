@@ -9,12 +9,13 @@
         <ul>
             {% for item in pedido.productos.all %}
                 <li>
-                    {{ item.producto.nombre }} - {{ item.cantidad }} x {{ item.producto.precio }}€ = {{ item.cantidad * item.producto.precio }}€
+                    {% load custom_filters %}
+                    {{ item.producto.nombre }} - {{ item.cantidad }} x {{ item.producto.precio }}€ = {{ item.cantidad|multiply:item.producto.precio }}€
                 </li>
             {% endfor %}
         </ul>
         
-        <p><strong>Total: {{ pedido.total }}€</strong></p>
+        <p><strong>Total: {{ pedido.importe }}€</strong></p>
 
         <p>Recibirás un correo electrónico de confirmación en breve.</p>
         

@@ -12,7 +12,7 @@
     <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
         {% csrf_token %}
         <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
-        <button id="submit">Pagar</button>
+        <button id="submit-button">Pagar</button>
     </form>
 
     <script type="text/javascript">
