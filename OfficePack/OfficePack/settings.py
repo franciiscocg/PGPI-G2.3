@@ -126,5 +126,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Stripe keys
+
 STRIPE_TEST_PUBLIC_KEY = 'pk_test_51QN3N4GAulyEFWDcq6XVmVBfMJxzmtNtuCttQ6BJ2Y49g1KFaTzYvm3yJk7xWJNiMkj10PihSxkIhgApL9lLB8OF00TBLMvMUI'
 STRIPE_TEST_SECRET_KEY = 'sk_test_51QN3N4GAulyEFWDcUTF2kANWKjlcxBO1vH7z6YHlnUu5MCberh9oT7gsgDJglE8a3CO1YwN4z1vwkgMa0eWB0k1E00uaYPbnjb'
+
+# SMTP server for gmail messages
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rabodetorohub@gmail.com'
+EMAIL_HOST_PASSWORD = 'bxzr yzhd qihv zqvz'
+DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'

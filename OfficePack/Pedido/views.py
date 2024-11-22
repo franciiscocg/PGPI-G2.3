@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
-
+from django.core.mail import send_mail
+from django.conf import settings
 from .forms import PedidoForm
 from .models import Pedido
-
 from Producto.models import Producto
-from django.conf import settings
-
 import stripe
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
@@ -133,7 +130,7 @@ def confirmar_pago(request):
             return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
 
         if intent.status == 'succeeded':
-            # Crear el pedido
+            # Se crea el pedido
             pedido = Pedido.objects.create(usuario=request.user, importe=total)
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)
@@ -145,6 +142,18 @@ def confirmar_pago(request):
             # Vaciar la cesta
             request.session['cesta'] = {}
             request.session.modified = True
+
+            # Se envia correo de confirmación
+            asunto = 'Confirmación de Pedido'
+            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nGracias por tu compra."
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = request.user.email  # El correo del usuario que realizó la compra
+
+            try:
+                send_mail(asunto, mensaje, from_email, [to_email])
+            except Exception as e:
+                # Se maneja posible errorer de envío de correo 
+                return render(request, 'mensaje_error.html', {'mensaje': f"Hubo un problema al enviar el correo: {str(e)}"})
 
             return render(request, 'pedido_confirmado.html', {'pedido': pedido})
         else:
