@@ -29,6 +29,9 @@ urlpatterns = [
     path('logout/', viewsUser.signout, name='signout'),
     path('login/', viewsUser.login, name='login'),
 
+    path('pedidos/', viewsPedido.listar_pedidos, name='listar_pedidos'),
+    path('mis_pedidos/', viewsPedido.listar_mis_pedidos, name='listar_mis_pedidos'),
+    path('pedido/<int:pedido_id>/', viewsPedido.mostrar_pedido, name='mostrar_pedido'),
     path('añadir/<int:producto_id>/', viewsPedido.añadir_a_cesta, name='añadir_a_cesta'),
     path('cesta/', viewsPedido.ver_cesta, name='ver_cesta'),
     path('pagar/', viewsPedido.pagar, name='pagar'),
