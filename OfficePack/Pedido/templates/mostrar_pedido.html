@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Pedido{% endblock %}
+
+{% block content %}
+    <h1>Detalles del Pedido</h1>
+
+    <p><strong>ID del Pedido:</strong> {{ pedido.id }}</p>
+    {% if request.user != null %}
+        <p><strong>Usuario:</strong> {{ pedido.usuario.username }}</p>
+    {% endif %} 
+    <p><strong>Email:</strong> {{ pedido.email }}</p>
+    <p><strong>Importe:</strong> ${{ pedido.importe }}</p>
+    <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+    <p><strong>Estado de Envío:</strong> {{ pedido.envio }}</p>
+
+    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+{% endblock %}
