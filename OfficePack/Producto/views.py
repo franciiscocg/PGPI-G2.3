@@ -50,3 +50,23 @@ def eliminar_producto(request, id):
         producto.delete()
         return redirect('listar_productos')
     return render(request, 'eliminar_producto.html', {'producto': producto})
+
+
+def buscar_por_nombre(request):
+    nombre = request.GET.get('nombre', '').strip()
+    fabricante = request.GET.get('fabricante', '').strip()
+    material = request.GET.get('material', '').strip()
+    tipo = request.GET.get('tipo', '').strip()
+
+    productos = Producto.objects.all()
+
+    if nombre:
+        productos = productos.filter(nombre__icontains=nombre)
+    if fabricante:
+        productos = productos.filter(fabricante__icontains=fabricante)
+    if material:
+        productos = productos.filter(material__icontains=material)
+    if tipo:
+        productos = productos.filter(tipo__icontains=tipo)
+
+    return render(request, 'listar_productos.html', {'productos': productos})

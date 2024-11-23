@@ -44,4 +44,5 @@ urlpatterns = [
     path('crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
     path('actualizar_producto/<int:id>/', viewsProducto.actualizar_producto, name='actualizar_producto'),
     path('eliminar_producto/<int:id>/', viewsProducto.eliminar_producto, name='eliminar_producto'),
+    path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
 ]
