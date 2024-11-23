@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -152,3 +153,6 @@ DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
 
 SSL_KEY_PATH = '\OfficePack\certs\mysite.key'
 SECURE_SSL_REDIRECT = False
+
+# PORT para Rende
+PORT = int(os.environ.get('PORT',8000))
