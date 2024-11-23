@@ -61,6 +61,7 @@ def añadir_a_cesta(request, producto_id):
         else:
             cesta[str(producto_id)] = {
                 'nombre': producto.nombre,
+                'foto': producto.foto,
                 'precio': float(producto.precio),
                 'cantidad': cantidad
             }

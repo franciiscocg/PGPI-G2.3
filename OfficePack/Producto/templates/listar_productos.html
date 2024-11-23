@@ -5,21 +5,30 @@
 <html>
 <head>
     <title>Lista de Productos</title>
+    <style>
+
+    </style>
 </head>
 <body>
-    <h1>Lista de Productos</h1>
-    <ul>
-        {% for producto in productos %}
-            <li>
-                {{ producto.nombre }} - {{ producto.precio }}
-                <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
-                    <button type="submit">Añadir a la cesta</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Lista de Productos</h1>
+        <ul class="product-list">
+            {% for producto in productos %}
+                <li class="product-item">
+                    <div class="product-info">
+                        <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+                        <span class="product-name">{{ producto.nombre }}</span>
+                        <span class="product-price">{{ producto.precio }} €</span>
+                    </div>
+                    <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
+                        {% csrf_token %}
+                        <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
+                        <button type="submit">Añadir a la cesta</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
 {% endblock content %}
