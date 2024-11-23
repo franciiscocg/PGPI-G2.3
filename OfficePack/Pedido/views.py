@@ -146,14 +146,30 @@ def confirmar_pago(request):
             return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
 
         if intent.status == 'succeeded':
-            # Se crea el pedido
+            # Verificar el stock antes de crear el pedido
+            for producto_id, item in cesta.items():
+                producto = Producto.objects.get(id=producto_id)
+                if item['cantidad'] > producto.cantidad_almacen:
+                    # Si el stock es insuficiente, muestra un mensaje y no se crea el pedido
+                    return render(request, 'mensaje_error.html', {
+                        'mensaje': f"No hay suficiente stock de '{producto.nombre}' para completar tu pedido."
+                    })
+
+            # Si hay stock suficiente, se crea el pedido
             pedido = Pedido.objects.create(usuario=request.user, importe=total, email=email, direccion=direccion)
+
+            # Se guarda una copia de la cesta para el mensaje del correo
+            productos_comprados = []
+
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)
                 cantidad = item['cantidad']
-                # Actualizar el stock
+
                 producto.cantidad_almacen -= cantidad
                 producto.save()
+
+                # Guardamos el producto y su cantidad
+                productos_comprados.append(f"- {producto.nombre}: {cantidad} x {producto.precio}€")
 
             # Vaciar la cesta
             request.session['cesta'] = {}
@@ -161,14 +177,17 @@ def confirmar_pago(request):
 
             # Se envia correo de confirmación
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nGracias por tu compra."
+            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
+            mensaje += "\n".join(productos_comprados)
+            mensaje += "\nGracias por tu compra."
+
             from_email = settings.DEFAULT_FROM_EMAIL
             to_email = email  # El correo del usuario que realizó la compra
 
             try:
                 send_mail(asunto, mensaje, from_email, [to_email])
             except Exception as e:
-                # Se maneja posible errorer de envío de correo 
+                # Se maneja posible error de envío de correo
                 return render(request, 'mensaje_error.html', {'mensaje': f"Hubo un problema al enviar el correo: {str(e)}"})
 
             return render(request, 'pedido_confirmado.html', {'pedido': pedido})
