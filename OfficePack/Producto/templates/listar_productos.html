@@ -5,11 +5,14 @@
 <html>
 <head>
     <title>Lista de Productos</title>
-    
+
     <section class="section" id="busqueda">
         <h2>Buscar Productos</h2>
-        <form action="/buscar" method="get" class="search-form">
-            <input type="text" name="query" class="search-input" placeholder="Buscar productos..." required>
+        <form action="{% url 'buscar_por_nombre' %}" method="get" class="search-form">
+            <input type="text" name="nombre" class="search-input" placeholder="Buscar por nombre...">
+            <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
+            <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
+            <input type="text" name="tipo" class="search-input" placeholder="Buscar por tipo...">
             <button type="submit" class="search-button">Buscar</button>
         </form>
     </section>
