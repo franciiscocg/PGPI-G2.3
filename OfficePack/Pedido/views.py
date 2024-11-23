@@ -168,9 +168,15 @@ def confirmar_pago(request):
 
             # Se envia correo de confirmación
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nGracias por tu compra."
+            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nLos productos comprados son:"
+            for producto_id, item in cesta.items():
+                producto = Producto.objects.get(id=producto_id)
+                cantidad = item['cantidad']
+                mensaje += f"- {producto.nombre}: {cantidad} x {producto.precio}€\n"
+
+            mensaje += "\nGracias por tu compra."
             from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = email  # El correo del usuario que realizó la compra
+            to_email = email
 
             try:
                 send_mail(asunto, mensaje, from_email, [to_email])

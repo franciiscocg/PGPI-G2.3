@@ -9,9 +9,10 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-
             user = form.save()
-            log(request, user)
+            backend = 'users_app.authentication.EmailBackend'
+
+            log(request, user, backend=backend)
             return redirect('home')
     else:
         form = CustomUserCreationForm()
