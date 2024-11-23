@@ -1,43 +1,48 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1>Cesta de la Compra</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for producto_id, item in cesta.items %}
-        <tr>
-            {% load custom_filters %}
-
-            <td>{{ item.nombre }}</td>
-            <td>{{ item.cantidad }}</td>
-            <td>{{ item.precio }}</td>
-            <td>{{ item.cantidad|multiply:item.precio }}</td>
-            <td>
-                <form action="{% url 'aumentar_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Aumentar</button>
-                </form>
-            </td>
-            <td>
-                <form action="{% url 'disminuir_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Disminuir</button>
-                </form>
-            </td>
-            <td><a href="{% url 'eliminar_de_cesta' producto_id %}">Eliminar</a></td>
-            
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<h3>Total: {{ total }}</h3>
-
-<a href="{% url 'pagar' %}">Realizar Pedido</a>
+{% if cesta.items %}
+<div class="cart-container">
+    <h1 class="cart-title">Cesta de la Compra</h1>
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto_id, item in cesta.items %}
+            <tr>
+                {% load custom_filters %}
+                <td><img src="{{ item.foto }}" alt="{{ item.nombre }}" class="cart-image"></td>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.cantidad }} unidades</td>
+                <td>{{ item.precio }} €</td>
+                <td>{{ item.cantidad|multiply:item.precio }} €</td>
+                <td>
+                    <form action="{% url 'aumentar_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post" class="cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="cart-button">+</button>
+                    </form>
+                    <form action="{% url 'disminuir_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post" class="cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="cart-button">-</button>
+                    </form>
+                    <a href="{% url 'eliminar_de_cesta' producto_id %}" class="cart-link">🗑</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="cart-total">Total: {{ total }} €</h3>
+    <a href="{% url 'pagar' %}" class="cart-checkout">Realizar Pedido</a>
+</div>
+{% else %}
+    <p class="cart-empty">Tu carrito está vacío. ¡Agrega productos para comenzar!</p>
+{% endif %}
 {% endblock content %}
