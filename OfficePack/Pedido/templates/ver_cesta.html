@@ -19,6 +19,18 @@
             <td>{{ item.cantidad }}</td>
             <td>{{ item.precio }}</td>
             <td>{{ item.cantidad|multiply:item.precio }}</td>
+            <td>
+                <form action="{% url 'aumentar_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Aumentar</button>
+                </form>
+            </td>
+            <td>
+                <form action="{% url 'disminuir_cantidad_producto_en_cesta' producto_id=producto_id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Disminuir</button>
+                </form>
+            </td>
             <td><a href="{% url 'eliminar_de_cesta' producto_id %}">Eliminar</a></td>
             
         </tr>
