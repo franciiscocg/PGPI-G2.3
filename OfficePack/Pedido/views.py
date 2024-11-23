@@ -37,18 +37,6 @@ def listar_mis_pedidos(request):
     return render(request, 'listar_pedidos.html', {'pedidos': pedidos})
 
 
-def actualizar_pedido(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
-    if request.method == 'POST':
-        form = PedidoForm(request.POST, instance=pedido)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_pedidos')
-    else:
-        form = PedidoForm(instance=pedido)
-    return render(request, 'actualizar_producto.html', {'form': form})
-
-
 def eliminar_pedido(request, pk):
     pedido = get_object_or_404(Pedido, pk=pk)
     if request.method == 'POST':
@@ -97,6 +85,25 @@ def ver_cesta(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
     return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': round(total, 2)})
+
+
+def aumentar_cantidad_producto_en_cesta(request, producto_id):
+    cesta = request.session.get('cesta', {})
+    if str(producto_id) in cesta:
+        cesta[str(producto_id)]['cantidad'] += 1
+        request.session.modified = True
+    return redirect('ver_cesta')
+
+
+def disminuir_cantidad_producto_en_cesta(request, producto_id):
+    cesta = request.session.get('cesta', {})
+    if str(producto_id) in cesta:
+        if cesta[str(producto_id)]['cantidad'] > 1:
+            cesta[str(producto_id)]['cantidad'] -= 1
+            request.session.modified = True
+        else:
+            return eliminar_de_cesta(request, producto_id)
+    return redirect('ver_cesta')
 
 
 def eliminar_de_cesta(request, producto_id):

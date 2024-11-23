@@ -37,7 +37,9 @@ urlpatterns = [
     path('pagar/', viewsPedido.pagar, name='pagar'),
     path('confirmar_pago/', viewsPedido.confirmar_pago, name='confirmar_pago'),
     path('eliminar_de_cesta/<int:producto_id>/', viewsPedido.eliminar_de_cesta, name='eliminar_de_cesta'),
-
+    path('aumentar_cantidad/<int:producto_id>/', viewsPedido.aumentar_cantidad_producto_en_cesta, name='aumentar_cantidad_producto_en_cesta'),
+    path('disminuir_cantidad/<int:producto_id>/', viewsPedido.disminuir_cantidad_producto_en_cesta, name='disminuir_cantidad_producto_en_cesta'),
+    
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
     path('crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
     path('actualizar_producto/<int:id>/', viewsProducto.actualizar_producto, name='actualizar_producto'),
