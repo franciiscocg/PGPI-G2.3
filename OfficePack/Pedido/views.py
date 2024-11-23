@@ -48,36 +48,25 @@ def eliminar_pedido(request, pk):
 # Operaciones con la cesta
 
 
-@login_required(login_url='/login/')
 def añadir_a_cesta(request, producto_id):
+    cantidad = int(request.POST.get('cantidad', 1))
     producto = Producto.objects.get(id=producto_id)
-
-    # Se verifica si ya existe una cesta activa
     if 'cesta' not in request.session:
         request.session['cesta'] = {}
-
     cesta = request.session['cesta']
-
-    # Se verifica si el stock es suficiente para añadir el producto
-    if producto.cantidad_almacen > 0:
-        # Si el producto ya está en la cesta, se aumentta la cantidad si hay stock suficiente
+    if producto.cantidad_almacen >= cantidad:
         if str(producto_id) in cesta:
-            if cesta[str(producto_id)]['cantidad'] < producto.cantidad_almacen:
-                cesta[str(producto_id)]['cantidad'] += 1
-            else:
-                # Si el stock es insuficiente, muestra un mensaje
-                return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para añadir más de este producto.'})
+            nueva_cantidad = min(cesta[str(producto_id)]['cantidad'] + cantidad, producto.cantidad_almacen)
+            cesta[str(producto_id)]['cantidad'] = nueva_cantidad
         else:
             cesta[str(producto_id)] = {
                 'nombre': producto.nombre,
                 'precio': float(producto.precio),
-                'cantidad': 1
+                'cantidad': cantidad
             }
-        request.session.modified = True  # Indicamos que la sesión ha sido modificada
+        request.session.modified = True
     else:
-        # Si el producto no tiene stock, muestra un mensaje
         return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
-
     return redirect('ver_cesta')
 
 
@@ -89,9 +78,13 @@ def ver_cesta(request):
 
 def aumentar_cantidad_producto_en_cesta(request, producto_id):
     cesta = request.session.get('cesta', {})
+    producto = Producto.objects.get(id=producto_id)
     if str(producto_id) in cesta:
-        cesta[str(producto_id)]['cantidad'] += 1
-        request.session.modified = True
+        if cesta[str(producto_id)]['cantidad'] < producto.cantidad_almacen:
+            cesta[str(producto_id)]['cantidad'] += 1
+            request.session.modified = True
+        else:
+            return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para añadir más de este producto.'})
     return redirect('ver_cesta')
 
 
@@ -113,8 +106,8 @@ def eliminar_de_cesta(request, producto_id):
         request.session.modified = True
     return redirect('ver_cesta')
 
-
 # Operaciones de pago
+
 
 def pagar(request):
     # Total de la cesta
@@ -168,15 +161,9 @@ def confirmar_pago(request):
 
             # Se envia correo de confirmación
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nLos productos comprados son:"
-            for producto_id, item in cesta.items():
-                producto = Producto.objects.get(id=producto_id)
-                cantidad = item['cantidad']
-                mensaje += f"- {producto.nombre}: {cantidad} x {producto.precio}€\n"
-
-            mensaje += "\nGracias por tu compra."
+            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\nGracias por tu compra."
             from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = email
+            to_email = email  # El correo del usuario que realizó la compra
 
             try:
                 send_mail(asunto, mensaje, from_email, [to_email])
