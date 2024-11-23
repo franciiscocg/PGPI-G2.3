@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Pedido',
     'Producto_pedido',
     'users_app',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +105,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # backend predeterminado
+    'users_app.authentication.EmailBackend',  # backend personalizado para autenticación por correo electrónico
+]
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -140,3 +147,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rabodetorohub@gmail.com'
 EMAIL_HOST_PASSWORD = 'bxzr yzhd qihv zqvz'
 DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
+
+# Certificados SSL
+
+SSL_KEY_PATH = '\OfficePack\certs\mysite.key'
+SECURE_SSL_REDIRECT = False
