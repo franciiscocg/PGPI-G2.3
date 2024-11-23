@@ -5,9 +5,14 @@
 <html>
 <head>
     <title>Lista de Productos</title>
-    <style>
-
-    </style>
+    
+    <section class="section" id="busqueda">
+        <h2>Buscar Productos</h2>
+        <form action="/buscar" method="get" class="search-form">
+            <input type="text" name="query" class="search-input" placeholder="Buscar productos..." required>
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+    </section>
 </head>
 <body>
     <div class="container">
