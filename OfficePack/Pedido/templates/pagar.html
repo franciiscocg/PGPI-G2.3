@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <!DOCTYPE html> 
 <html lang="es">
 <head>
@@ -7,25 +9,27 @@
     <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-    <h1>Pagar Pedido</h1>
+    <div class="container">
+        <h1>Pagar Pedido</h1>
+        <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
+            {% csrf_token %}
 
-    <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
-        {% csrf_token %}
+            {% if not request.user.is_authenticated %}
+            <div>
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            {% endif %}
 
-        {% if not request.user.is_authenticated %}
-        <div>
-            <label for="email">Correo Electrónico</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        {% endif %}
+            <div>
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" required>
+            </div>
 
-        <div>
-            <label for="direccion">Dirección</label>
-            <input type="text" id="direccion" name="direccion" required>
-
-        <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
-        <button id="submit-button">Pagar</button>
-    </form>
+            <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
+            <button id="submit-button">Pagar</button>
+        </form>
+    </div>
 
     <script type="text/javascript">
         var stripe = Stripe("{{ stripe_public_key }}");  // Tu clave pública de Stripe
@@ -72,3 +76,4 @@
     </script>
 </body>
 </html>
+{% endblock content %}
