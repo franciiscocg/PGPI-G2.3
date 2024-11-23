@@ -1,33 +1,42 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 
 from django.contrib.auth import login as log
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate
+from .forms import CustomLoginForm, CustomUserCreationForm
 
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+
             user = form.save()
-            log(request, user)  # Inicia sesión automáticamente
-            return redirect('home')  # Redirige a la página principal
+            log(request, user)
+            return redirect('home')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
+
     return render(request, 'register.html', {'form': form})
 
 
 def login(request):
+
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = CustomLoginForm(request, data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            log(request, user)
-            return redirect('home')  # Redirige a la página principal
+            email = form.cleaned_data.get('username')  # 'username' es en realidad el correo electrónico
+            password = form.cleaned_data.get('password')
+
+            # Usar el email para autenticar
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                log(request, user)
+                return redirect('home')  # Redirigir al home después de iniciar sesión
+            else:
+                form.add_error(None, "Correo electrónico o contraseña incorrectos.")  # Error en caso de fallo de autenticación
     else:
-        form = AuthenticationForm()
+        form = CustomLoginForm()
+
     return render(request, 'login.html', {'form': form})
 
 
