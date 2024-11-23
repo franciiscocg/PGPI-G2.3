@@ -14,7 +14,6 @@
                 {{ producto.nombre }} - {{ producto.precio }}
                 <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
-                    <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
                     <button type="submit">Añadir a la cesta</button>
                 </form>
             </li>
