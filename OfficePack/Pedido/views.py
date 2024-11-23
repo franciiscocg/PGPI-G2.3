@@ -56,16 +56,14 @@ def añadir_a_cesta(request, producto_id):
     cesta = request.session['cesta']
     if producto.cantidad_almacen >= cantidad:
         if str(producto_id) in cesta:
-            cesta[str(producto_id)]['cantidad'] += cantidad
+            nueva_cantidad = min(cesta[str(producto_id)]['cantidad'] + cantidad, producto.cantidad_almacen)
+            cesta[str(producto_id)]['cantidad'] = nueva_cantidad
         else:
             cesta[str(producto_id)] = {
                 'nombre': producto.nombre,
                 'precio': float(producto.precio),
                 'cantidad': cantidad
             }
-        # Disminuir la cantidad en el almacén
-        producto.cantidad_almacen -= cantidad
-        producto.save()
         request.session.modified = True
     else:
         return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
@@ -82,10 +80,8 @@ def aumentar_cantidad_producto_en_cesta(request, producto_id):
     cesta = request.session.get('cesta', {})
     producto = Producto.objects.get(id=producto_id)
     if str(producto_id) in cesta:
-        if producto.cantidad_almacen > 0:
+        if cesta[str(producto_id)]['cantidad'] < producto.cantidad_almacen:
             cesta[str(producto_id)]['cantidad'] += 1
-            producto.cantidad_almacen -= 1
-            producto.save()
             request.session.modified = True
         else:
             return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para añadir más de este producto.'})
@@ -94,12 +90,9 @@ def aumentar_cantidad_producto_en_cesta(request, producto_id):
 
 def disminuir_cantidad_producto_en_cesta(request, producto_id):
     cesta = request.session.get('cesta', {})
-    producto = Producto.objects.get(id=producto_id)
     if str(producto_id) in cesta:
         if cesta[str(producto_id)]['cantidad'] > 1:
             cesta[str(producto_id)]['cantidad'] -= 1
-            producto.cantidad_almacen += 1
-            producto.save()
             request.session.modified = True
         else:
             return eliminar_de_cesta(request, producto_id)
@@ -109,10 +102,6 @@ def disminuir_cantidad_producto_en_cesta(request, producto_id):
 def eliminar_de_cesta(request, producto_id):
     cesta = request.session.get('cesta', {})
     if str(producto_id) in cesta:
-        producto = Producto.objects.get(id=producto_id)
-        cantidad = cesta[str(producto_id)]['cantidad']
-        producto.cantidad_almacen += cantidad
-        producto.save()
         del cesta[str(producto_id)]
         request.session.modified = True
     return redirect('ver_cesta')
