@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-blczu+f7f44qu_k$c-0)y8i)aa)=+e2rn*ygb=th9d1@n&w@#1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['officepack.onrender.com','localhost']
+ALLOWED_HOSTS = ['officepack.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -155,4 +155,4 @@ SSL_KEY_PATH = '\OfficePack\certs\mysite.key'
 SECURE_SSL_REDIRECT = False
 
 # PORT para Rende
-PORT = int(os.environ.get('PORT',8000))
+PORT = int(os.environ.get('PORT', 8000))

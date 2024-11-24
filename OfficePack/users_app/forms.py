@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Este correo electrónico ya está registrado.")
-        return email   
+        return email
 
 
 class CustomLoginForm(AuthenticationForm):
