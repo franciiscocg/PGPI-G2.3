@@ -133,10 +133,16 @@ def confirmar_pago(request):
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
     if request.method == 'POST':
+
         if request.user.is_authenticated:
+            # Usuario autenticado
             email = request.user.email
+            usuario = request.user
         else:
-            email = request.POST.get('email')
+            # Usuario no autenticado
+            email = request.POST.get('email')  # Correo proporcionado en el formulario
+            usuario = None  # No hay un usuario autenticado, se manejará solo con el email
+
         direccion = request.POST.get('direccion')
         payment_intent_id = request.POST.get('payment_intent_id')
 
@@ -157,7 +163,7 @@ def confirmar_pago(request):
                     })
 
             # Si hay stock suficiente, se crea el pedido
-            pedido = Pedido.objects.create(usuario=request.user, importe=total, email=email, direccion=direccion)
+            pedido = Pedido.objects.create(usuario=usuario, importe=total, email=email, direccion=direccion)
 
             # Se guarda una copia de la cesta para el mensaje del correo
             productos_comprados = []
@@ -176,14 +182,14 @@ def confirmar_pago(request):
             request.session['cesta'] = {}
             request.session.modified = True
 
-            # Se envia correo de confirmación
+            # Enviar correo de confirmación
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola {request.user.username},\n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
+            mensaje = f"Hola, \n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
             mensaje += "\n".join(productos_comprados)
             mensaje += "\nGracias por tu compra."
 
             from_email = settings.DEFAULT_FROM_EMAIL
-            to_email = email  # El correo del usuario que realizó la compra
+            to_email = email  # El correo proporcionado por el usuario no autenticado
 
             try:
                 send_mail(asunto, mensaje, from_email, [to_email])
