@@ -43,15 +43,6 @@ def actualizar_producto(request, id):
         form = ProductoForm(instance=pedido)
     return render(request, 'actualizar_producto.html', {'form': form})
 
-
-def eliminar_producto(request, id):
-    producto = get_object_or_404(Producto, id=id)
-    if request.method == 'POST':
-        producto.delete()
-        return redirect('listar_productos')
-    return render(request, 'eliminar_producto.html', {'producto': producto})
-
-
 def buscar_por_nombre(request):
     nombre = request.GET.get('nombre', '').strip()
     fabricante = request.GET.get('fabricante', '').strip()
