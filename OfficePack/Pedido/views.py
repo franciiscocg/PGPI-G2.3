@@ -6,6 +6,8 @@ from .forms import PedidoForm
 from .models import Pedido, MetodoPago
 from Producto.models import Producto
 import stripe
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
@@ -68,7 +70,7 @@ def añadir_a_cesta(request, producto_id):
         request.session.modified = True
     else:
         return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
-    return redirect('ver_cesta')
+    return redirect(request.META.get('HTTP_REFERER', 'ver_cesta'))
 
 
 def ver_cesta(request):
@@ -86,7 +88,7 @@ def aumentar_cantidad_producto_en_cesta(request, producto_id):
             request.session.modified = True
         else:
             return render(request, 'mensaje_error.html', {'mensaje': 'No hay suficiente stock para añadir más de este producto.'})
-    return redirect('ver_cesta')
+    return redirect(request.META.get('HTTP_REFERER', '/cesta'))
 
 
 def disminuir_cantidad_producto_en_cesta(request, producto_id):
@@ -97,7 +99,7 @@ def disminuir_cantidad_producto_en_cesta(request, producto_id):
             request.session.modified = True
         else:
             return eliminar_de_cesta(request, producto_id)
-    return redirect('ver_cesta')
+    return redirect(request.META.get('HTTP_REFERER', 'ver_cesta'))
 
 
 def eliminar_de_cesta(request, producto_id):
@@ -105,7 +107,14 @@ def eliminar_de_cesta(request, producto_id):
     if str(producto_id) in cesta:
         del cesta[str(producto_id)]
         request.session.modified = True
-    return redirect('ver_cesta')
+    return redirect(request.META.get('HTTP_REFERER', 'ver_cesta'))
+
+
+def obtener_cesta(request):
+    cesta = request.session.get('cesta', {})
+    cesta_html = render_to_string('cesta.html', {'cesta': cesta})
+    return JsonResponse({'status': 'success', 'html': cesta_html})
+
 
 # Operaciones de pago
 
