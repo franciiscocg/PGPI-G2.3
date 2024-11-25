@@ -32,6 +32,11 @@ def listar_producto(request, id):
     return render(request, 'actualizar_producto.html', {'form': form})
 
 
+def mostrar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    return render(request, 'mostrar_producto.html', {'producto': producto})
+
+
 def actualizar_producto(request, id):
     pedido = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
@@ -42,6 +47,7 @@ def actualizar_producto(request, id):
     else:
         form = ProductoForm(instance=pedido)
     return render(request, 'actualizar_producto.html', {'form': form})
+
 
 def buscar_por_nombre(request):
     nombre = request.GET.get('nombre', '').strip()
