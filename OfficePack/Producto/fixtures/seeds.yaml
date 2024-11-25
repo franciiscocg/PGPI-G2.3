@@ -1,0 +1,54 @@
+- model: Producto.producto
+  pk: 1
+  fields:
+    nombre: "Escritorio Ejecutivo"
+    foto: "https://cdn1.valemob.es/775-large_default/escritorio-de-oficina-recto-madera.jpg"
+    precio: 299.99
+    cantidad_almacen: 50
+    fabricante: "OfiMuebles S.A."
+    material: "Madera de roble"
+    tipo: "Escritorio"
+
+- model: Producto.producto
+  pk: 2
+  fields:
+    nombre: "Silla ergonómica de oficina"
+    foto: "https://scontent.fsvq5-1.fna.fbcdn.net/v/t39.30808-6/462189418_3818431675095595_2725084864217893511_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hPco0uqYsJYQ7kNvgFekUU5&_nc_zt=23&_nc_ht=scontent.fsvq5-1.fna&_nc_gid=Aq9qujqwdhV19mdDbgMkEPs&oh=00_AYDwh0yiEugWhSDg-yNlsi3P5jyGyeNSBZWYC3laYo7foA&oe=674900B5"
+    precio: 119.99
+    cantidad_almacen: 100
+    fabricante: "Sillas Comfort"
+    material: "Tela y base de aluminio"
+    tipo: "Silla"
+
+- model: Producto.producto
+  pk: 3
+  fields:
+    nombre: "Estante modular"
+    foto: "https://preview.redd.it/4vooyo2jtfu41.jpg?auto=webp&s=3d60ce1bd9a86ca2e6f79c6425afb2f7b4fb3e7c"
+    precio: 89.50
+    cantidad_almacen: 30
+    fabricante: "Almacenaje y Diseño"
+    material: "Madera MDF"
+    tipo: "Estante"
+
+- model: Producto.producto
+  pk: 4
+  fields:
+    nombre: "Lámpara de escritorio LED"
+    foto: "https://s.libertaddigital.com/2021/10/25/290/0/lampara-de-escritorio-led-jukstg-1906-1.jpg"
+    precio: 35.99
+    cantidad_almacen: 75
+    fabricante: "LuzPro"
+    material: "Plástico y metal"
+    tipo: "Lámpara"
+
+- model: Producto.producto
+  pk: 5
+  fields:
+    nombre: "Archivador metálico"
+    foto: "https://example.com/images/archivador_metalico.jpg"
+    precio: 99.99
+    cantidad_almacen: 40
+    fabricante: "OfiMetal"
+    material: "Acero pintado"
+    tipo: "Archivador"

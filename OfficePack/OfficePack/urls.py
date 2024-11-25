@@ -19,6 +19,7 @@ from django.urls import path
 from Pedido import views as viewsPedido
 from Producto import views as viewsProducto
 from users_app import views as viewsUser
+from Producto_pedido import views as viewsProducto_pedido
 
 
 urlpatterns = [
@@ -45,4 +46,6 @@ urlpatterns = [
     path('actualizar_producto/<int:id>/', viewsProducto.actualizar_producto, name='actualizar_producto'),
     path('eliminar_producto/<int:id>/', viewsProducto.eliminar_producto, name='eliminar_producto'),
     path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
+    
+    path('rastrear/', viewsProducto_pedido.rastrear_pedido, name='rastrear_pedido'),
 ]
