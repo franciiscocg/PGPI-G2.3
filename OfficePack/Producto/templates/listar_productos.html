@@ -34,6 +34,7 @@
                                 <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
                                 <span class="product-name">{{ producto.nombre }}</span>
                                 <span class="product-price">{{ producto.precio }} €</span>
+                                <span class="product-price">Stock: {{ producto.cantidad_almacen }} u</span>
                             </div>
                             <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
                                 {% csrf_token %}
@@ -44,7 +45,11 @@
                     {% endfor %}
                 </ul>
             </div>
-            <div>{% include "cesta.html" %}</div>
+            <div>
+                {% block cesta %}
+                {% include 'cesta.html' %}
+                {% endblock cesta %}
+            </div>
         </div>
     </div>
 </body>
