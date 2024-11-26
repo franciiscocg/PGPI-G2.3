@@ -11,7 +11,7 @@ class EstadoPedido(models.TextChoices):
 
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=255)
     importe = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     direccion = models.CharField(max_length=200)

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        /* Centrar todo el contenido en la página */
+        .producto-detalle {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto; /* Centra horizontalmente */
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .producto-detalle img {
+            width: 100%;
+            max-width: 300px; /* Limita el tamaño de la imagen */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .producto-detalle h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .producto-detalle p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .producto-detalle button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .producto-detalle button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <div class="producto-detalle">
+        <h1>{{ producto.nombre }}</h1>
+
+        {% if producto.foto %}
+        <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+        {% else %}
+        <p>No hay imagen disponible</p>
+        {% endif %}
+
+        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+        <p><strong>Cantidad en almacén:</strong> {{ producto.cantidad_almacen }}</p>
+        <p><strong>Fabricante:</strong> {{ producto.fabricante }}</p>
+        <p><strong>Material:</strong> {{ producto.material }}</p>
+        <p><strong>Tipo:</strong> {{ producto.tipo }}</p>
+
+        <p><form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
+            {% csrf_token %}
+            <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
+            <button type="submit">Añadir a la cesta</button>
+        </form></p>
+    </div>
+{% endblock content %}
