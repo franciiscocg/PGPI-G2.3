@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from Pedido.views import crear_pedido
 from Pedido.models import Pedido
 from Producto_pedido.models import ProductoPedido
 
@@ -20,3 +21,12 @@ def rastrear_pedido(request):
         'productos_pedido': productos_pedido,
         'error': error
     })
+
+def cambiar_direccion(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if (pedido.estado == 'P' or pedido.estado == 'EP'):
+        pedido.direccion = request.POST.get('direccion')
+        pedido.save()
+        
+    return redirect(request.META.get('HTTP_REFERER', ''))
+        

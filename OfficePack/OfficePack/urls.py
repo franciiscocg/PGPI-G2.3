@@ -47,4 +47,5 @@ urlpatterns = [
     path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
     
     path('rastrear/', viewsProducto_pedido.rastrear_pedido, name='rastrear_pedido'),
+    path('rastrear/cambiar_direccion/<int:pedido_id>', viewsProducto_pedido.cambiar_direccion, name='cambiar_direccion'),
 ]
