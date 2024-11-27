@@ -320,13 +320,10 @@ body {
 
             <a href="/catalogo">Catálogo</a>
             <a href="/cesta">Cesta</a>
-
-            <a href="/crear_producto">Crear producto</a>
-            <a href="/actualizar_producto/1">Actualizar Producto</a>
-            <a href="/eliminar_producto/1">Eliminar Producto</a>           
             <a href="/rastrear">Rastrear Pedido</a>
 
             {% if user.is_authenticated %}
+            <a href="/perfil">Perfil</a>
             <a href="/logout">Logout</a>
             {% else %}
             <a href="/register">Registrarse</a>
