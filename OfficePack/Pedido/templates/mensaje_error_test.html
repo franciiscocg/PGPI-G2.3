@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Hubo un problema con tu pago</h1>
+        <p class="alert alert-danger">La has liado Juio.</p>
+
+        <a href="{% url 'ver_cesta' %}" class="btn btn-warning">Volver a la cesta</a>
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+    </div>
+{% endblock %}

@@ -26,7 +26,18 @@
                 <input type="text" id="direccion" name="direccion" required>
             </div>
 
-            <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
+            <div>
+                <label for="metodo_pago">Método de Pago</label>
+                <select id="metodo_pago" name="metodo_pago" required>
+                    <option value="T">Tarjeta de Crédito</option>
+                    <option value="C">Contra Reembolso</option>
+                </select>
+            </div>
+
+            <div id="card-element-container">
+                <div id="card-element"></div>  <!-- Aquí se renderiza el formulario de tarjeta -->
+            </div>
+
             <button id="submit-button">Pagar</button>
         </form>
     </div>
@@ -42,37 +53,63 @@
         card.mount('#card-element');
 
         var form = document.getElementById('payment-form');
+        var metodoPagoSelect = document.getElementById('metodo_pago');
+        var cardElementContainer = document.getElementById('card-element-container');
+
+        metodoPagoSelect.addEventListener('change', function() {
+            if (metodoPagoSelect.value === 'T') {
+                cardElementContainer.style.display = 'block';
+            } else {
+                cardElementContainer.style.display = 'none';
+            }
+        });
 
         form.addEventListener('submit', function(event) {
-            event.preventDefault();
+            if (metodoPagoSelect.value === 'T') {
+                event.preventDefault();
 
-            // Se confirma el pago con Stripe
-            stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: card,
-                    billing_details: {
-                        name: 'Nombre del Cliente'  
+                // Se confirma el pago con Stripe
+                stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            name: 'Nombre del Cliente'  
+                        }
                     }
-                }
-            }).then(function(result) {
-                if (result.error) {
-                    // Muestra un error si la transacción falla
-                    alert(result.error.message);
-                } else {
-                    if (result.paymentIntent.status === 'succeeded') {
-                        // Si el pago fue exitoso, se agrega el payment_intent_id al formulario y se envia al servidor
-                        var paymentIntentIdInput = document.createElement('input');
-                        paymentIntentIdInput.type = 'hidden';
-                        paymentIntentIdInput.name = 'payment_intent_id';
-                        paymentIntentIdInput.value = result.paymentIntent.id;
-                        form.appendChild(paymentIntentIdInput);
+                }).then(function(result) {
+                    if (result.error) {
+                        // Muestra un error si la transacción falla
+                        alert(result.error.message);
+                    } else {
+                        if (result.paymentIntent.status === 'succeeded') {
+                            // Si el pago fue exitoso, se agrega el payment_intent_id al formulario y se envia al servidor
+                            var paymentIntentIdInput = document.createElement('input');
+                            paymentIntentIdInput.type = 'hidden';
+                            paymentIntentIdInput.name = 'payment_intent_id';
+                            paymentIntentIdInput.value = result.paymentIntent.id;
+                            form.appendChild(paymentIntentIdInput);
 
-                        // Ahora se envia el formulario con un POST al backend
-                        form.submit();
+                            // Ahora se envia el formulario con un POST al backend
+                            form.submit();
+                        }
                     }
-                }
-            });
+                });
+            } else if (metodoPagoSelect.value === 'C') {
+                // Para el pago contra reembolso, simplemente envía el formulario
+                var paymentIntentIdInput = document.createElement('input');
+                paymentIntentIdInput.type = 'hidden';
+                paymentIntentIdInput.name = 'payment_intent_id';
+                paymentIntentIdInput.value = 'manual_payment';
+                form.appendChild(paymentIntentIdInput);
+
+                form.submit();
+            }
         });
+
+        // Inicialmente ocultar el formulario de tarjeta si el método de pago no es tarjeta
+        if (metodoPagoSelect.value !== 'T') {
+            cardElementContainer.style.display = 'none';
+        }
     </script>
 </body>
 </html>

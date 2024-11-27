@@ -9,6 +9,9 @@ class EstadoPedido(models.TextChoices):
     ENTREGADO = 'ET', 'Entregado'
     CANCELADO = 'C', 'Cancelado'
 
+class MetodoPago(models.TextChoices):
+    TARJETA = 'T', 'Tarjeta de Crédito'
+    CONTRAREEMBOLSO = 'C', 'Contra Reembolso'
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -20,6 +23,12 @@ class Pedido(models.Model):
         choices=EstadoPedido.choices,
         default=EstadoPedido.PENDIENTE
     )
+    metodo_pago = models.CharField(
+        max_length=2,
+        choices=MetodoPago.choices,
+        default=MetodoPago.TARJETA
+    )
+
 
 
 def __str__(self):

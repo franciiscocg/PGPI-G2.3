@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import PedidoForm
-from .models import Pedido
+from .models import Pedido, MetodoPago
 from Producto.models import Producto
 import stripe
 from django.http import JsonResponse
@@ -126,10 +126,9 @@ def pagar(request):
 
     # PaymentIntent con el total de la cesta
     intent = stripe.PaymentIntent.create(
-        amount=int(total * 100),  # Cantidad en centavos
-        currency='eur',
-    )
-
+         amount=int(total * 100),  # Cantidad en centavos
+          currency='eur',
+     )
     # Se pasa la clave pública de Stripe y el client secret al html de pagar
     return render(request, 'pagar.html', {
         'stripe_public_key': settings.STRIPE_TEST_PUBLIC_KEY,
@@ -153,15 +152,28 @@ def confirmar_pago(request):
             usuario = None  # No hay un usuario autenticado, se manejará solo con el email
 
         direccion = request.POST.get('direccion')
-        payment_intent_id = request.POST.get('payment_intent_id')
+        metodo_pago = request.POST.get('metodo_pago')
+        
+        if metodo_pago == 'T':
+            payment_intent_id = request.POST.get('payment_intent_id')
 
-        # Se verifica que el PaymentIntent haya ido bien
-        try:
-            intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        except stripe.error.StripeError as e:
-            return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
-
-        if intent.status == 'succeeded':
+            # Se verifica que el PaymentIntent haya ido bien
+            try:
+                intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+            except stripe.error.StripeError as e:
+                return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
+        elif metodo_pago == 'C':
+            # Para el pago contra reembolso, no se necesita verificar con Stripe
+            intent = {
+                'id': 'manual_payment',
+                'status': 'succeeded',
+            }
+        else:
+            return render(request, 'mensaje_error.html', {'mensaje': 'Método de pago no válido.'})
+            
+         
+            
+        if intent['status'] == 'succeeded':
             # Verificar el stock antes de crear el pedido
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)
