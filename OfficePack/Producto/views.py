@@ -68,11 +68,9 @@ def buscar_por_nombre(request):
         productos = productos.filter(material__icontains=material)
     if tipo:
         productos = productos.filter(tipo__icontains=tipo)
-    if fecha_inicio:
+    if fecha_inicio and fecha_fin:
         fecha_inicio = parse_date(fecha_inicio)
-        productos = productos.filter(fecha__gte=fecha_inicio)
-    if fecha_fin:
         fecha_fin = parse_date(fecha_fin)
-        productos = productos.filter(fecha__lte=fecha_fin)
+        productos = productos.filter(fecha__gte=fecha_inicio, fecha__lte=fecha_fin)
 
     return render(request, 'listar_productos.html', {'productos': productos})
