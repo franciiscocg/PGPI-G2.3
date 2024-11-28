@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestionar Productos</title>
+</head>
+<body>
+    <div  class="container">
+        <h1>Gestionar Productos</h1>
+        <form class="crear_producto">
+            <button type="submit"><a href="{% url 'crear_producto' %}">Nuevo producto</a></button>
+        </form>
+        <section class="section" id="busqueda">
+            <h2>Buscar Productos</h2>
+            <form action="{% url 'buscar_por_nombre' %}" method="get" class="search-form">
+                <input type="text" name="nombre" class="search-input" placeholder="Buscar por nombre...">
+                <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
+                <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
+                <input type="text" name="tipo" class="search-input" placeholder="Buscar por tipo...">
+                <button type="submit" class="search-button">Buscar</button>
+            </form>
+        </section>
+        <div>
+            <ul class="lista-gestionar-productos">
+                {% for producto in productos %}
+                    <li class="product-item">
+                        <div class="product-info">
+                            <a href="{% url 'mostrar_producto' producto.id %}">
+                                <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+                                <span class="product-name">{{ producto.nombre }}</span>
+                            </a>
+                            <span class="product-price">{{ producto.precio }} €</span>
+                            <span class="product-price">Stock: {{ producto.cantidad_almacen }} u</span>
+                        </div>
+                        <div class="opciones">
+                            <form class="gestionar_productos">
+                                <button type="submit"><a href="{% url 'actualizar_producto' producto.id %}">Actualizar</a></button>
+                            </form>
+                            <form action="{% url 'eliminar_producto' producto.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

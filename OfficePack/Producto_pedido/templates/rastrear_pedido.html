@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Rastrear Pedido</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="pedido_id">ID del Pedido</label>
+            <input type="text" id="pedido_id" name="pedido_id" required>
+        </div>
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if error %}
+        <p class="alert alert-danger">{{ error }}</p>
+    {% endif %}
+
+    {% if pedido %}
+        <h2>Detalles del Pedido</h2>
+        <p><strong>ID del Pedido:</strong> {{ pedido.id }}</p>
+        <p><strong>Email:</strong> {{ pedido.email }}</p>
+        <p><strong>Importe:</strong> {{ pedido.importe }} €</p>
+        <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+        <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+        <p><strong>Método de Pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
+
+        <h3>Productos en el Pedido</h3>
+        <ul>
+            {% for producto_pedido in productos_pedido %}
+                <li>{{ producto_pedido.cantidad }} x {{ producto_pedido.producto.nombre }} a {{ producto_pedido.precio_unitario }} € cada uno</li>
+            {% endfor %}
+        </ul>
+
+        {% if pedido.estado == "P" or pedido.estado == "EP" %}
+            <form action="{% url 'cambiar_direccion' pedido.id %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <label>Nueva dirección de entrega</label>
+                    <input type="text" name="direccion" id="direccion">
+                </div>
+                <button type="submit">Cambiar dirección</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

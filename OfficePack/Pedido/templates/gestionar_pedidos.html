@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestionar Pedidos</title>
+</head>
+<body>
+    <div  class="container">
+        <h1>Gestionar Pedidos</h1>
+        <form class="crear_pedido">
+            <button type="submit"><a href="{% url 'crear_pedido' %}">Nuevo pedido</a></button>
+        </form>
+        <div>
+           {% for pedido in pedidos %}
+                <li class="pedido-item">
+                    <span class="pedido-email">{{ pedido.email }}</span>
+                    <span class="pedido-importe">Importe: {{ pedido.importe }} €</span>
+                    <span class="pedido-direccion">Dirección: {{ pedido.direccion }}</span>
+                    <span class="pedido-estado">Estado: {{ pedido.estado }}</span>
+                    <div class="opciones">
+                        <form class="gestionar_pedidos">
+                            <button type="submit"><a href="{% url 'actualizar_pedido' pedido.id %}">Actualizar</a></button>
+                        </form>
+                        <form action="{% url 'eliminar_pedido' pedido.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

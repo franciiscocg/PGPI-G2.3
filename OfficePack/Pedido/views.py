@@ -8,24 +8,50 @@ from Producto.models import Producto
 import stripe
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.http import HttpResponseForbidden
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
 
+@login_required(login_url='/login/')
 def crear_pedido(request):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     if request.method == 'POST':
         form = PedidoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_pedidos')
+            return redirect('/gestionar_pedidos/')
     else:
         form = PedidoForm()
     return render(request, 'crear_pedido.html', {'form': form})
 
+@login_required(login_url='/login/')
+def actualizar_pedido(request, pedido_id):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
+    if request.method == 'POST':
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/gestionar_pedidos/')
+    else:
+        form = PedidoForm(instance=get_object_or_404(Pedido, id=pedido_id))
+    return render(request, 'actualizar_pedido.html', {'form': form})
 
+
+@login_required(login_url='/login/')
 def listar_pedidos(request):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     pedidos = Pedido.objects.all()
-    return render(request, 'listar_pedidos.html', {'pedido': pedidos})
+    return render(request, 'gestionar_pedidos.html', {'pedidos': pedidos})
 
 
 def mostrar_pedido(request, pedido_id):
@@ -39,12 +65,17 @@ def listar_mis_pedidos(request):
     return render(request, 'listar_pedidos.html', {'pedidos': pedidos})
 
 
-def eliminar_pedido(request, pk):
-    pedido = get_object_or_404(Pedido, pk=pk)
+@login_required(login_url='/login/')
+def eliminar_pedido(request, pedido_id):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
+    pedido = get_object_or_404(Pedido, id=pedido_id)
     if request.method == 'POST':
         pedido.delete()
-        return redirect('listar_pedidos')
-    return render(request, 'eliminar_pedido.html', {'pedido': pedido})
+        return redirect('/gestionar_pedidos')
+    return redirect(request.META.get('HTTP_REFERER', ''))
 
 
 # Operaciones con la cesta
@@ -124,12 +155,15 @@ def pagar(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
+    # Costes de envío
+    if total < 30:
+        total += 5
+
     # PaymentIntent con el total de la cesta
     intent = stripe.PaymentIntent.create(
-        amount=int(total * 100),  # Cantidad en centavos
-        currency='eur',
-    )
-
+         amount=int(total * 100),  # Cantidad en centavos
+          currency='eur',
+     )
     # Se pasa la clave pública de Stripe y el client secret al html de pagar
     return render(request, 'pagar.html', {
         'stripe_public_key': settings.STRIPE_TEST_PUBLIC_KEY,
@@ -140,6 +174,10 @@ def pagar(request):
 def confirmar_pago(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
+
+    # Costes de envío
+    if total < 30:
+        total += 5
 
     if request.method == 'POST':
 
@@ -153,15 +191,28 @@ def confirmar_pago(request):
             usuario = None  # No hay un usuario autenticado, se manejará solo con el email
 
         direccion = request.POST.get('direccion')
-        payment_intent_id = request.POST.get('payment_intent_id')
+        metodo_pago = request.POST.get('metodo_pago')
+        
+        if metodo_pago == 'T':
+            payment_intent_id = request.POST.get('payment_intent_id')
 
-        # Se verifica que el PaymentIntent haya ido bien
-        try:
-            intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        except stripe.error.StripeError as e:
-            return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
-
-        if intent.status == 'succeeded':
+            # Se verifica que el PaymentIntent haya ido bien
+            try:
+                intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+            except stripe.error.StripeError as e:
+                return render(request, 'mensaje_error.html', {'mensaje': f"Error con Stripe: {str(e)}"})
+        elif metodo_pago == 'C':
+            # Para el pago contra reembolso, no se necesita verificar con Stripe
+            intent = {
+                'id': 'manual_payment',
+                'status': 'succeeded',
+            }
+        else:
+            return render(request, 'mensaje_error.html', {'mensaje': 'Método de pago no válido.'})
+            
+         
+            
+        if intent['status'] == 'succeeded':
             # Verificar el stock antes de crear el pedido
             for producto_id, item in cesta.items():
                 producto = Producto.objects.get(id=producto_id)

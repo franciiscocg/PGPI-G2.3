@@ -4,17 +4,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .grid-container {
-            display: grid;
-            grid-template-columns: 60% 40%;
-        }
-    </style>
     <title>Lista de Productos</title>
 </head>
 <body>
     <div  class="container">
         <h1>Catálogo de Productos</h1>
+        <section class="section" id="busqueda">
+            <h2>Buscar Productos</h2>
+            <form action="{% url 'buscar_por_nombre' %}" method="get" class="search-form">
+                <input type="text" name="nombre" class="search-input" placeholder="Buscar por nombre...">
+                <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
+                <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
+                <input type="text" name="tipo" class="search-input" placeholder="Buscar por tipo...">
+                <button type="submit" class="search-button">Buscar</button>
+            </form>
+        </section>
         <div class="grid-container">
             <div>
                 <section class="section" id="busqueda">
@@ -38,16 +42,22 @@
                     {% for producto in productos %}
                         <li class="product-item">
                             <div class="product-info">
-                                <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
-                                <span class="product-name">{{ producto.nombre }}</span>
+                                <a href="{% url 'mostrar_producto' producto.id %}">
+                                    <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+                                    <span class="product-name">{{ producto.nombre }}</span>
+                                </a>
                                 <span class="product-price">{{ producto.precio }} €</span>
                                 <span class="product-price">Stock: {{ producto.cantidad_almacen }} u</span>
                             </div>
-                            <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
-                                {% csrf_token %}
-                                <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
-                                <button type="submit" class="addProduct_button">Añadir a la cesta</button>
-                            </form>
+                            {% if producto.cantidad_almacen > 0 %}
+                                <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
+                                    {% csrf_token %}
+                                    <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
+                                    <button type="submit">Añadir a la cesta</button>
+                                </form>
+                            {% else %}
+                                <h4 class="agotado">AGOTADO</h4>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>

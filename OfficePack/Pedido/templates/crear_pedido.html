@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Producto</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Crear Pedido</title>
 </head>
 <body>
-    <h1>Editar Producto</h1>
+    <h1>Crea un Nuevo Pedido</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Actualizar Producto</button>
+        <input type="submit" value="Crear Pedido">
     </form>
 </body>
 </html>
