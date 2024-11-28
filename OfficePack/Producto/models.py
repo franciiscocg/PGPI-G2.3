@@ -4,9 +4,9 @@ import datetime
 
 class Producto(models.Model):
     class TipoChoices(models.TextChoices):
-        MUEBLE = 'MUEBLE', 'Mueble'
-        ELECTRONICO = 'ELECTRONICO', 'Electronico'
-        DECORACION = 'DECORACION', 'Decoracion'
+        MUEBLE = 'MUEBLE'
+        ELECTRONICO = 'ELECTRONICO'
+        DECORACION = 'DECORACION'
         
     nombre = models.CharField(max_length=255)
     foto = models.URLField(max_length=500, blank=True, null=True)

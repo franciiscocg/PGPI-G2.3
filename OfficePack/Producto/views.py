@@ -1,3 +1,5 @@
+from datetime import date
+import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductoForm
@@ -98,10 +100,13 @@ def buscar_por_nombre(request):
         productos = productos.filter(material__icontains=material)
     if tipo:
         productos = productos.filter(tipo=tipo)
-    if fecha_inicio or fecha_fin:
+    if fecha_inicio:
         fecha_inicio = parse_date(fecha_inicio)
+        productos = productos.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
         fecha_fin = parse_date(fecha_fin)
-        productos = productos.filter(fecha__gte=fecha_inicio) and productos.filter(fecha__lte=fecha_fin)
+        productos = productos.filter(fecha__lte=fecha_fin)
+
 
     tipos = Producto.TipoChoices.choices
-    return render(request, 'listar_productos.html', {'productos': productos})
+    return render(request, 'listar_productos.html', {'productos': productos, 'tipos': tipos})
