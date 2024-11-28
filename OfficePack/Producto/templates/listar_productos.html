@@ -24,6 +24,7 @@
                         <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
                         <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
                         <input type="text" name="tipo" class="search-input" placeholder="Buscar por tipo...">
+
                         <div class="date-container">
                             <label for="fecha_inicio">Fecha de inicio</label>
                             <input type="date" name="fecha_inicio" class="search-input" placeholder="Fecha de inicio">
@@ -34,17 +35,17 @@
                     </form>
                 </section>
                 <ul class="product-list">
-                    {% for nombre,precio,cantidad_almacen,foto in productos %}
+                    {% for producto in productos %}
                         <li class="product-item">
                             <div class="product-info">
-                                <img src="{{ foto }}" alt="{{ nombre }}">
-                                <span class="product-name">{{ nombre }}</span>
-                                <span class="product-price">{{ precio }} €</span>
-                                <span class="product-price">Stock: {{ cantidad_almacen }} u</span>
+                                <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+                                <span class="product-name">{{ producto.nombre }}</span>
+                                <span class="product-price">{{ producto.precio }} €</span>
+                                <span class="product-price">Stock: {{ producto.cantidad_almacen }} u</span>
                             </div>
                             <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
                                 {% csrf_token %}
-                                <input type="number" name="cantidad" value="1" min="1" max="{{ cantidad_almacen }}">
+                                <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
                                 <button type="submit" class="addProduct_button">Añadir a la cesta</button>
                             </form>
                         </li>
