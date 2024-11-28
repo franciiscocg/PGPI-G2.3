@@ -1,8 +1,11 @@
+from datetime import date
+import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductoForm
 from .models import Producto
 from django.shortcuts import get_object_or_404
+from django.utils.dateparse import parse_date
 from django.http import HttpResponseForbidden
 
 @login_required(login_url='/login/')
@@ -84,6 +87,8 @@ def buscar_por_nombre(request):
     fabricante = request.GET.get('fabricante', '').strip()
     material = request.GET.get('material', '').strip()
     tipo = request.GET.get('tipo', '').strip()
+    fecha_inicio = request.GET.get('fecha_inicio','').strip()
+    fecha_fin = request.GET.get('fecha_fin','').strip()
 
     productos = Producto.objects.all()
 
@@ -94,6 +99,14 @@ def buscar_por_nombre(request):
     if material:
         productos = productos.filter(material__icontains=material)
     if tipo:
-        productos = productos.filter(tipo__icontains=tipo)
+        productos = productos.filter(tipo=tipo)
+    if fecha_inicio:
+        fecha_inicio = parse_date(fecha_inicio)
+        productos = productos.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
+        fecha_fin = parse_date(fecha_fin)
+        productos = productos.filter(fecha__lte=fecha_fin)
 
-    return render(request, 'listar_productos.html', {'productos': productos})
+
+    tipos = Producto.TipoChoices.choices
+    return render(request, 'listar_productos.html', {'productos': productos, 'tipos': tipos})

@@ -1,7 +1,13 @@
 from django.db import models
+import datetime
 
 
 class Producto(models.Model):
+    class TipoChoices(models.TextChoices):
+        MUEBLE = 'MUEBLE'
+        ELECTRONICO = 'ELECTRONICO'
+        DECORACION = 'DECORACION'
+        
     nombre = models.CharField(max_length=255)
     foto = models.URLField(max_length=500, blank=True, null=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
