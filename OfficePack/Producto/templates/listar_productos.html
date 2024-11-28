@@ -21,6 +21,23 @@
         </section>
         <div class="grid-container">
             <div>
+                <section class="section" id="busqueda">
+                    <h2>Buscar Productos</h2>
+                    <form action="{% url 'buscar_por_nombre' %}" method="get" class="search-form">
+                        <input type="text" name="nombre" class="search-input" placeholder="Buscar por nombre...">
+                        <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
+                        <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
+                        <input type="text" name="tipo" class="search-input" placeholder="Buscar por tipo...">
+
+                        <div class="date-container">
+                            <label for="fecha_inicio">Fecha de inicio</label>
+                            <input type="date" name="fecha_inicio" class="search-input" placeholder="Fecha de inicio">
+                            <label for="fecha_fin">Fecha de fin</label>
+                            <input type="date" name="fecha_fin" class="search-input" placeholder="Fecha de fin">
+                        </div>
+                        <button type="submit" class="search-button">Buscar</button>
+                    </form>
+                </section>
                 <ul class="product-list">
                     {% for producto in productos %}
                         <li class="product-item">
@@ -54,4 +71,23 @@
     </div>
 </body>
 </html>
+<style>
+    .search-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-input {
+        margin-bottom: 10px;
+    }
+
+    .date-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-button {
+        align-self: flex-start;
+    }
+</style>
 {% endblock content %}
