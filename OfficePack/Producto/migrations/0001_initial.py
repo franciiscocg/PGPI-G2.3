@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('cantidad_almacen', models.IntegerField()),
                 ('fabricante', models.CharField(max_length=255)),
                 ('tipo', models.CharField(max_length=100)),
+                ('material',models.CharField(max_length=255)),
             ],
         ),
     ]
