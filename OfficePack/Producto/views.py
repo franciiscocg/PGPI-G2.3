@@ -16,7 +16,7 @@ def crear_producto(request):
 
 
 def listar_productos(request):
-    productos = Producto.objects.filter(cantidad_almacen__gt=0)
+    productos = Producto.objects.all()
     return render(request, 'listar_productos.html', {'productos': productos})
 
 
