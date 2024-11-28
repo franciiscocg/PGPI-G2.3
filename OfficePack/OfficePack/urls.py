@@ -45,6 +45,10 @@ urlpatterns = [
     path('producto/<int:producto_id>/', viewsProducto.mostrar_producto, name='mostrar_producto'),
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
     path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
+    path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_producto'),
+    path('gestionar_productos/actualizar_producto/<int:producto_id>', viewsProducto.actualizar_producto, name='actualizar_producto'),
+    path('gestionar_productos/eliminar_producto/<int:producto_id>', viewsProducto.eliminar_producto, name='eliminar_producto'),
+    path('gestionar_productos/crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
     
     path('rastrear/', viewsProducto_pedido.rastrear_pedido, name='rastrear_pedido'),
     path('rastrear/cambiar_direccion/<int:pedido_id>', viewsProducto_pedido.cambiar_direccion, name='cambiar_direccion'),

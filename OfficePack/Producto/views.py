@@ -4,12 +4,21 @@ from .models import Producto
 from django.shortcuts import get_object_or_404
 
 
+def gestionar_productos(request):
+    productos = Producto.objects.all()
+    return render(request, 'gestionar_productos.html', {'productos': productos})
+
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.delete()
+    return redirect(request.META.get('HTTP_REFERER', ''))
+
 def crear_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect('/gestionar_productos/')
     else:
         form = ProductoForm()
     return render(request, 'crear_producto.html', {'form': form})
@@ -26,7 +35,7 @@ def listar_producto(request, id):
         form = ProductoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect(request.META.get('HTTP_REFERER', ''))
     else:
         form = ProductoForm(instance=pedido)
     return render(request, 'actualizar_producto.html', {'form': form})
@@ -37,13 +46,13 @@ def mostrar_producto(request, producto_id):
     return render(request, 'mostrar_producto.html', {'producto': producto})
 
 
-def actualizar_producto(request, id):
-    pedido = get_object_or_404(Producto, id=id)
+def actualizar_producto(request, producto_id):
+    pedido = get_object_or_404(Producto, id=producto_id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect('/gestionar_productos/')
     else:
         form = ProductoForm(instance=pedido)
     return render(request, 'actualizar_producto.html', {'form': form})

@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Producto</title>
+    <title>Crear Producto</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,8 +15,7 @@
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-
-        <input type="submit" value="Create Producto">
+        <input type="submit" value="Crear Producto">
     </form>
 </body>
 </html>
