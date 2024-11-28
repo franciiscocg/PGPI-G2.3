@@ -1,19 +1,37 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .forms import ProductoForm
 from .models import Producto
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
 
-
+@login_required(login_url='/login/')
 def gestionar_productos(request):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     productos = Producto.objects.all()
     return render(request, 'gestionar_productos.html', {'productos': productos})
 
+@login_required(login_url='/login/')
 def eliminar_producto(request, producto_id):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     producto = get_object_or_404(Producto, id=producto_id)
-    producto.delete()
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('/gestionar_productos')
     return redirect(request.META.get('HTTP_REFERER', ''))
 
+@login_required(login_url='/login/')
 def crear_producto(request):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
@@ -22,7 +40,6 @@ def crear_producto(request):
     else:
         form = ProductoForm()
     return render(request, 'crear_producto.html', {'form': form})
-
 
 def listar_productos(request):
     productos = Producto.objects.all()
@@ -45,8 +62,12 @@ def mostrar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     return render(request, 'mostrar_producto.html', {'producto': producto})
 
-
+@login_required(login_url='/login/')
 def actualizar_producto(request, producto_id):
+    # comprobamos que el user sea el admin
+    if request.user.email != "officepack@gmail.com":
+        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
+    
     pedido = get_object_or_404(Producto, id=producto_id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=pedido)

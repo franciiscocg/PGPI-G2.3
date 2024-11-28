@@ -317,12 +317,51 @@
         .opciones form {
             display:inline-block;
         }
-        .product-list-gestionar {
+        .lista-gestionar-productos {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 20px;
             list-style-type: none;
             padding: 0;
+        }
+
+    /* Estilos gestionar_pedidos */
+        .crear_pedido {
+            text-align:center;
+            margin-bottom: 4vh;
+        }
+        .gestionar_pedidos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .lista-gestionar-pedido {
+            list-style-type: none;
+            padding: 0;
+        }
+        .pedido-item {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            list-style-type: none;
+            padding: 1vh;
+            margin: 1vh;
+            min-height: 5vh;
+            border: 1px solid #ccc;
+            border-radius: 10px;  
+            align-items: center; 
+        }
+        .pedido-email {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+        .pedido-importe, 
+        .pedido-direccion, 
+        .pedido-estado {
+            color: #010101;
+            margin-bottom: 10px;
         }
 
     /* Estilos listar_productos */
@@ -348,6 +387,10 @@
             <a href="/rastrear">Rastrear Pedido</a>
 
             {% if user.is_authenticated %}
+                {% if user.email == 'officepack@gmail.com' %}
+                    <a href="/gestionar_productos">Gestionar Productos</a>
+                    <a href="/gestionar_pedidos">Gestionar Pedidos</a>
+                {% endif %}
             <a href="/perfil">Perfil</a>
             <a href="/logout">Logout</a>
             {% else %}
@@ -355,8 +398,7 @@
             <a href="/login">Login</a>
             {% endif %}
 
-            <a href="/gestionar_productos">Gestionar Productos</a>
-            <a href="/gestionar_productos">Gestionar Pedidos</a>
+            
         </nav>
     </header>
     {% block content %}
