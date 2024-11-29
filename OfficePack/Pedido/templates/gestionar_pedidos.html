@@ -15,19 +15,19 @@
         <div>
            {% for pedido in pedidos %}
                 <li class="pedido-item">
-                    <span class="pedido-email">{{ pedido.email }}</span>
-                    <span class="pedido-importe">Importe: {{ pedido.importe }} €</span>
-                    <span class="pedido-direccion">Dirección: {{ pedido.direccion }}</span>
-                    <span class="pedido-estado">Estado: {{ pedido.estado }}</span>
-                    <div class="opciones">
-                        <form class="gestionar_pedidos">
-                            <button type="submit"><a href="{% url 'actualizar_pedido' pedido.id %}">Actualizar</a></button>
-                        </form>
-                        <form action="{% url 'eliminar_pedido' pedido.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit">Eliminar</button>
-                        </form>
-                    </div>
+                    <a href="{% url 'mostrar_pedido' pedido.id %}">
+                        <span class="pedido-email">{{ pedido.email }}</span>
+                        <span class="pedido-importe">Importe: {{ pedido.importe }} €</span>
+                        <span class="pedido-direccion">Dirección: {{ pedido.direccion }}</span>
+                        <span class="pedido-estado">Estado: {{ pedido.estado }}</span>
+                    </a>
+                    <form action="{% url 'actualizar_pedido' pedido.id %}">
+                        <button type="submit">Actualizar</button>
+                    </form>
+                    <form action="{% url 'eliminar_pedido' pedido.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Eliminar</button>
+                    </form>
                 </li>
             {% endfor %}
         </div>
