@@ -33,7 +33,6 @@ class CustomLoginForm(AuthenticationForm):
 
 
 class EditProfileForm(forms.ModelForm):
-
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['first_name', 'last_name', 'username']

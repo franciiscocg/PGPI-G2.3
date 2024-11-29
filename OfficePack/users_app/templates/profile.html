@@ -6,7 +6,9 @@
     <section style="max-width: 600px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <h2 style="text-align: center; color: #333;">Detalles del Perfil</h2>
         <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 10px;"><strong>Nombre completo:</strong> {{ user.username }}</li>
+            <li style="margin-bottom: 10px;"><strong>Nombre :</strong> {{ user.first_name }}</li>
+            <li style="margin-bottom: 10px;"><strong>Apellidos:</strong> {{ user.last_name }}</li>
+            <li style="margin-bottom: 10px;"><strong>Nombre de usuario:</strong> {{ user.username }}</li>
             <li style="margin-bottom: 10px;"><strong>Correo electrónico:</strong> {{ user.email }}</li>
             <li style="margin-bottom: 10px;"><strong>Fecha de creación de cuenta:</strong> {{ user.date_joined }}</li>
             <li style="margin-bottom: 10px;"><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
