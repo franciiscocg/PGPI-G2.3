@@ -5,6 +5,7 @@ from django.conf import settings
 from .forms import PedidoForm
 from .models import Pedido
 from Producto.models import Producto
+from Producto_pedido.models import ProductoPedido
 import stripe
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -12,6 +13,8 @@ from django.http import HttpResponseForbidden
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
+importe_minimo_envio_gratuito = 30
+gastos_de_envio = 2.99
 
 @login_required(login_url='/login/')
 def crear_pedido(request):
@@ -56,7 +59,8 @@ def listar_pedidos(request):
 
 def mostrar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
-    return render(request, 'mostrar_pedido.html', {'pedido': pedido})
+    productos = ProductoPedido.objects.filter(pedido=pedido)
+    return render(request, 'mostrar_pedido.html', {'pedido': pedido, 'productos': productos})
 
 
 @login_required(login_url='/login/')
@@ -156,13 +160,13 @@ def pagar(request):
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
     # Costes de envío
-    if total < 30:
-        total += 5
+    if total < importe_minimo_envio_gratuito:
+        total += gastos_de_envio
 
     # PaymentIntent con el total de la cesta
     intent = stripe.PaymentIntent.create(
-         amount=int(total * 100),  # Cantidad en centavos
-          currency='eur',
+        amount=int(total * 100),  # Cantidad en centavos
+        currency='eur',
      )
     # Se pasa la clave pública de Stripe y el client secret al html de pagar
     return render(request, 'pagar.html', {
@@ -176,8 +180,8 @@ def confirmar_pago(request):
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
 
     # Costes de envío
-    if total < 30:
-        total += 5
+    if total < importe_minimo_envio_gratuito:
+        total += gastos_de_envio
 
     if request.method == 'POST':
 
@@ -235,6 +239,9 @@ def confirmar_pago(request):
                 producto.cantidad_almacen -= cantidad
                 producto.save()
 
+                # Creamos los objetos producto_pedido que se guardarán en la bbdd
+                ProductoPedido.objects.create(producto = producto, pedido = pedido, cantidad = cantidad, precio_unitario = producto.precio)
+
                 # Guardamos el producto y su cantidad
                 productos_comprados.append(f"- {producto.nombre}: {cantidad} x {producto.precio}€")
 
@@ -246,6 +253,7 @@ def confirmar_pago(request):
             asunto = 'Confirmación de Pedido'
             mensaje = f"Hola, \n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
             mensaje += "\n".join(productos_comprados)
+            mensaje += f"\nPara rastrear el pedido, use el número {pedido.pk}"
             mensaje += "\nGracias por tu compra."
 
             from_email = settings.DEFAULT_FROM_EMAIL
