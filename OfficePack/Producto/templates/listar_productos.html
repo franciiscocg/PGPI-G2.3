@@ -14,8 +14,18 @@
             <form action="{% url 'buscar_por_nombre' %}" method="get" class="search-form">
                 <div class="text-inputs">
                     <input type="text" name="nombre" class="search-input" placeholder="Buscar por nombre...">
-                    <input type="text" name="fabricante" class="search-input" placeholder="Buscar por fabricante...">
-                    <input type="text" name="material" class="search-input" placeholder="Buscar por material...">
+                    <select name="fabricante" class="search-input">
+                        <option value="">Selecciona un fabricante</option>
+                        {% for fabricante in fabricantes %}
+                            <option value="{{fabricante}}">{{fabricante}}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="material" class="search-input">
+                        <option value="">Selecciona un material</option>
+                        {% for material in materiales %}
+                            <option value="{{material}}">{{material}}</option>
+                        {% endfor %}
+                    </select>
                     <select name="tipo" class="search-input">
                         <option value="">Selecciona un tipo</option>
                         <option value= "MUEBLE">Mueble</option>
@@ -30,6 +40,9 @@
                     <input type="date" name="fecha_fin" class="search-input" placeholder="Fecha de fin">
                 </div>
                 <button type="submit" class="search-button">Buscar</button>
+            </form>
+            <form action="{% url 'listar_productos' %}">
+                <button type="submit" class="search-button">Eliminar filtros</button>
             </form>
         </section>
         <div class="grid-container">

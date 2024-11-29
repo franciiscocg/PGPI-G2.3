@@ -15,7 +15,10 @@ def gestionar_productos(request):
         return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
     
     productos = Producto.objects.all()
-    return render(request, 'gestionar_productos.html', {'productos': productos})
+    materiales = set(map(lambda x:x.material, productos))
+    fabricantes = set(map(lambda x:x.fabricante, productos))
+
+    return render(request, 'gestionar_productos.html', {'productos': productos, 'materiales': materiales, 'fabricantes': fabricantes})
 
 @login_required(login_url='/login/')
 def eliminar_producto(request, producto_id):
@@ -46,7 +49,9 @@ def crear_producto(request):
 
 def listar_productos(request):
     productos = Producto.objects.all()
-    return render(request, 'listar_productos.html', {'productos': productos})
+    materiales = set(map(lambda x:x.material, productos))
+    fabricantes = set(map(lambda x:x.fabricante, productos))
+    return render(request, 'listar_productos.html', {'productos': productos, 'materiales':materiales, 'fabricantes':fabricantes})
 
 
 def listar_producto(request, id):
@@ -95,9 +100,9 @@ def buscar_por_nombre(request):
     if nombre:
         productos = productos.filter(nombre__icontains=nombre)
     if fabricante:
-        productos = productos.filter(fabricante__icontains=fabricante)
+        productos = productos.filter(fabricante=fabricante)
     if material:
-        productos = productos.filter(material__icontains=material)
+        productos = productos.filter(material=material)
     if tipo:
         productos = productos.filter(tipo=tipo)
     if fecha_inicio:
@@ -109,4 +114,37 @@ def buscar_por_nombre(request):
 
 
     tipos = Producto.TipoChoices.choices
-    return render(request, 'listar_productos.html', {'productos': productos, 'tipos': tipos})
+    materiales = set(map(lambda x:x.material, productos))
+    fabricantes = set(map(lambda x:x.fabricante, productos))
+    return render(request, 'listar_productos.html', {'productos': productos, 'tipos': tipos, 'materiales':materiales, 'fabricantes':fabricantes})
+
+def buscar_por_nombre_gestionar(request):
+    nombre = request.GET.get('nombre', '').strip()
+    fabricante = request.GET.get('fabricante', '').strip()
+    material = request.GET.get('material', '').strip()
+    tipo = request.GET.get('tipo', '').strip()
+    fecha_inicio = request.GET.get('fecha_inicio','').strip()
+    fecha_fin = request.GET.get('fecha_fin','').strip()
+
+    productos = Producto.objects.all()
+
+    if nombre:
+        productos = productos.filter(nombre__icontains=nombre)
+    if fabricante:
+        productos = productos.filter(fabricante=fabricante)
+    if material:
+        productos = productos.filter(material=material)
+    if tipo:
+        productos = productos.filter(tipo=tipo)
+    if fecha_inicio:
+        fecha_inicio = parse_date(fecha_inicio)
+        productos = productos.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
+        fecha_fin = parse_date(fecha_fin)
+        productos = productos.filter(fecha__lte=fecha_fin)
+
+
+    tipos = Producto.TipoChoices.choices
+    materiales = set(map(lambda x:x.material, productos))
+    fabricantes = set(map(lambda x:x.fabricante, productos))
+    return render(request, 'gestionar_productos.html', {'productos': productos, 'tipos': tipos, 'materiales':materiales, 'fabricantes':fabricantes})

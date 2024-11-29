@@ -45,6 +45,7 @@ urlpatterns = [
     path('producto/<int:producto_id>/', viewsProducto.mostrar_producto, name='mostrar_producto'),
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
     path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
+    path('buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
     
     path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_producto'),
     path('gestionar_productos/actualizar_producto/<int:producto_id>', viewsProducto.actualizar_producto, name='actualizar_producto'),
