@@ -30,3 +30,10 @@ class CustomLoginForm(AuthenticationForm):
         except get_user_model().DoesNotExist:
             raise forms.ValidationError("Este correo electrónico no está registrado.")
         return email
+
+
+class EditProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username']

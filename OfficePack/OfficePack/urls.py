@@ -29,6 +29,8 @@ urlpatterns = [
     path('register/', viewsUser.register),
     path('logout/', viewsUser.signout, name='signout'),
     path('login/', viewsUser.login, name='login'),
+    path('perfil/', viewsUser.profile, name='profile'),
+    path('editar_perfil/', viewsUser.edit_profile, name='edit_profile'),
 
     path('pedidos/', viewsPedido.listar_pedidos, name='listar_pedidos'),
     path('mis_pedidos/', viewsPedido.listar_mis_pedidos, name='listar_mis_pedidos'),

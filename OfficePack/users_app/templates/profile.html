@@ -1,30 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de {{ user.username }}</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
 
-    <header>
-        <h1>Bienvenido, {{ user.username }}</h1>
-    </header>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;">
 
-    <section>
-        <h2>Detalles del Perfil</h2>
-        <ul>
-            <li><strong>Nombre completo:</strong> {{ user.get_full_name }}</li>
-            <li><strong>Correo electrónico:</strong> {{ user.email }}</li>
-            <li><strong>Fecha de creación de cuenta:</strong> {{ user.date_joined }}</li>
-            <li><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
+    <section style="max-width: 600px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h2 style="text-align: center; color: #333;">Detalles del Perfil</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 10px;"><strong>Nombre completo:</strong> {{ user.username }}</li>
+            <li style="margin-bottom: 10px;"><strong>Correo electrónico:</strong> {{ user.email }}</li>
+            <li style="margin-bottom: 10px;"><strong>Fecha de creación de cuenta:</strong> {{ user.date_joined }}</li>
+            <li style="margin-bottom: 10px;"><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
         </ul>
 
-        <p><form action="{% url 'logout' %}" method="POST">
+        <form action="{% url 'edit_profile' %}" method="POST" style="text-align: center; margin-top: 20px;">
             {% csrf_token %}
-            <button type="submit">Cerrar sesión</button>
-        </form></p>
+            <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Editar perfil</button>
+        </form>
     </section>
 
 </body>
-</html>
+{% endblock content %}

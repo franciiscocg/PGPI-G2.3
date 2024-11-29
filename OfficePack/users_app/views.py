@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from django.contrib.auth import login as log
 from django.contrib.auth import logout, authenticate
-from .forms import CustomLoginForm, CustomUserCreationForm
+from .forms import CustomLoginForm, CustomUserCreationForm, EditProfileForm
 
 
 def register(request):
@@ -39,6 +39,21 @@ def login(request):
         form = CustomLoginForm()
 
     return render(request, 'login.html', {'form': form})
+
+
+def profile(request):
+    return render(request, 'profile.html')
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/perfil/')
+    else:
+        form = EditProfileForm()
+    return render(request, 'edit_profile.html', {'form': form})
 
 
 def signout(request):
