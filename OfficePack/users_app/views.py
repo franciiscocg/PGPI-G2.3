@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-
 from django.contrib.auth import login as log
 from django.contrib.auth import logout, authenticate
 from .forms import CustomLoginForm, CustomUserCreationForm, EditProfileForm
+from Producto.models import Producto
 
 
 def register(request):
@@ -62,4 +62,5 @@ def signout(request):
 
 
 def home(request):
-    return render(request, 'home.html')
+    ultimos_productos = Producto.objects.order_by('-fecha')[:4]  # Ajusta el número de productos según sea necesario
+    return render(request, 'home.html', {'ultimos_productos': ultimos_productos})

@@ -105,7 +105,7 @@ def añadir_a_cesta(request, producto_id):
         request.session.modified = True
     else:
         return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
-    return redirect(request.META.get('HTTP_REFERER', 'ver_cesta'))
+    return redirect('listar_productos')
 
 
 def ver_cesta(request):

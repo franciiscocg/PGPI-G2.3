@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="hero">
     <h1>Bienvenido a OfficePack</h1>
     <p>Diseño y calidad</p>
@@ -13,6 +14,37 @@
         <button type="submit" class="search-button">Buscar</button>
     </form>
 </section>
+
+<div class="grid-container-home">
+    <div>
+        <div class="section">
+            <h2>Ultimos Productos</h2>
+        </div>
+        <ul class="product-list-home horizontal-list">
+            {% for producto in ultimos_productos %}
+                <li class="product-item-home">
+                    <div class="product-info-home">
+                        <a href="{% url 'mostrar_producto' producto.id %}">
+                            <img src="{{ producto.foto }}" alt="{{ producto.nombre }}">
+                            <span class="product-name">{{ producto.nombre }}</span>
+                        </a>
+                        <span class="product-price">{{ producto.precio }} €</span>
+                        <span class="product-price">Stock: {{ producto.cantidad_almacen }} u</span>
+                    </div>
+                    {% if producto.cantidad_almacen > 0 %}
+                        <form action="{% url 'añadir_a_cesta' producto.id %}" method="post" class="add-to-cart">
+                            {% csrf_token %}
+                            <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
+                            <button type="submit">Añadir a la cesta</button>
+                        </form>
+                    {% else %}
+                        <h4 class="agotado">AGOTADO</h4>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 
 <section class="section" id="nosotros">
@@ -28,3 +60,4 @@
 </html>
 
 {% endblock content %}
+
