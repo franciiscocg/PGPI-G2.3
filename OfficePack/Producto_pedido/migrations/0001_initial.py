@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('cantidad', models.IntegerField()),
                 ('pedido', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Pedido.pedido')),
                 ('producto', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Producto.producto')),
+                ('precio_unitario', models.DecimalField(decimal_places=2, max_digits=10)),
             ],
         ),
     ]

@@ -4,9 +4,9 @@ import datetime
 
 class Producto(models.Model):
     class TipoChoices(models.TextChoices):
-        MUEBLE = 'MUEBLE'
-        ELECTRONICO = 'ELECTRONICO'
-        DECORACION = 'DECORACION'
+        MUEBLE = 'MUEBLE', 'Mueble'
+        ELECTRONICO = 'ELECTRONICO', 'Electronico'
+        DECORACION = 'DECORACION', 'Decoracion'
         
     nombre = models.CharField(max_length=255)
     foto = models.URLField(max_length=500, blank=True, null=True)
@@ -15,6 +15,7 @@ class Producto(models.Model):
     fabricante = models.CharField(max_length=255)
     material = models.CharField(max_length=255)
     tipo = models.CharField(max_length=100)
+    fecha = models.DateField(default=datetime.date(2024,1,1))
 
     def __str__(self):
         return self.nombre

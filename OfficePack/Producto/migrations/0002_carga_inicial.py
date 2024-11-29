@@ -78,6 +78,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(carga_inicial, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(carga_inicial),
     ]
 
