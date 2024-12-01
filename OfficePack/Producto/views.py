@@ -20,9 +20,8 @@ def gestionar_productos(request):
     return render(request, 'gestionar_productos.html', {'productos': productos, 'materiales': materiales, 'fabricantes': fabricantes, 'tipos': Producto.TipoChoices.choices})
 
 @login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@user_passes_test(lambda u: u.is_staff)
 def eliminar_producto(request, producto_id):
-    
     producto = get_object_or_404(Producto, id=producto_id)
     if request.method == 'POST':
         producto.delete()
@@ -30,7 +29,7 @@ def eliminar_producto(request, producto_id):
     return redirect(request.META.get('HTTP_REFERER', ''))
 
 @login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@user_passes_test(lambda u: u.is_staff)
 def crear_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
@@ -65,9 +64,8 @@ def mostrar_producto(request, producto_id):
     return render(request, 'mostrar_producto.html', {'producto': producto})
 
 @login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@user_passes_test(lambda u: u.is_staff)
 def actualizar_producto(request, producto_id):
-    
     producto = get_object_or_404(Producto, id=producto_id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=producto)
