@@ -18,7 +18,7 @@ importe_minimo_envio_gratuito = 30
 gastos_de_envio = 2.99
 
 @login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@user_passes_test(lambda u: u.is_staff)
 def crear_pedido(request):
     # comprobamos que el user sea el admin
     if request.user.email != "officepack@gmail.com":
@@ -34,12 +34,12 @@ def crear_pedido(request):
     return render(request, 'crear_pedido.html', {'form': form})
 
 @login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@user_passes_test(lambda u: u.is_staff)
 def actualizar_pedido(request, pedido_id):
     # comprobamos que el user sea el admin
-
+    pedido = get_object_or_404(Pedido, id=pedido_id)
     if request.method == 'POST':
-        form = PedidoForm(request.POST)
+        form = PedidoForm(request.POST, instance=pedido)
         if form.is_valid():
             form.save()
             return redirect('/gestionar_pedidos/')
