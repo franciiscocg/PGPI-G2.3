@@ -9,37 +9,19 @@
                 {% csrf_token %}
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="username" style="display: block; margin-bottom: 5px;">Nombre de usuario</label>
-                    <input id="username" type="text" name="username" class="form-control" placeholder="Nombre de usuario" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                    <input id="username" type="text" name="username" class="form-control" placeholder="Nombre de usuario" value="{{ user.username }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="first_name" style="display: block; margin-bottom: 5px;">Nombre</label>
-                    <input id="first_name" type="text" name="first_name" class="form-control" placeholder="Nombre" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                    <input id="first_name" type="text" name="first_name" class="form-control" placeholder="Nombre" value="{{ user.first_name }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="last_name" style="display: block; margin-bottom: 5px;">Apellidos</label>
-                    <input id="last_name" type="text" name="last_name" class="form-control" placeholder="Apellidos" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                    <input id="last_name" type="text" name="last_name" class="form-control" placeholder="Apellidos" value="{{ user.last_name }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
                 <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Actualizar perfil</button>
             </form>
         </div>
     </section>
 </body>
-{% endblock %}
-
-{% block script %}
-<script>
-
-    window.onload = function(){
-
-        var username = "{{ user.username }}"; 
-        document.getElementById('username').value = username;
-
-        var first_name = "{{ user.first_name }}";
-        document.getElementById('first_name').value = first_name;
-
-        var last_name = "{{ user.last_name }}";
-        document.getElementById('last_name').value = last_name;
-
-    };
-</script>
-{% endblock %}
+{% endblock content %}

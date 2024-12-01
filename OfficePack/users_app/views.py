@@ -53,7 +53,7 @@ def edit_profile(request):
             form.save()
             return redirect('/perfil/')
     else:
-        form = EditProfileForm()
+        form = EditProfileForm(instance=request.user)
     return render(request, 'edit_profile.html', {'form': form})
 
 

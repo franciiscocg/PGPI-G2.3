@@ -9,8 +9,8 @@ from django.utils.dateparse import parse_date
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User
 
-@login_required(login_url='/login/')
-@user_passes_test(User.is_staff)
+@login_required(login_url='/login/') 
+@user_passes_test(lambda u: u.is_staff)
 def gestionar_productos(request):
     
     productos = Producto.objects.all()
