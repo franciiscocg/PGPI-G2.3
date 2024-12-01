@@ -1,11 +1,16 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Registro</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrar</button>
-</form>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0;">
+    <section style="max-width: 600px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div class="col">
+            <h2 style="text-align: center; color: #333;">Registro</h2>
+            <form method="post" enctype="multipart/form-data" style="padding: 20px;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Registrar</button>
+            </form>
+        </div>
+    </section>
+</body>
 {% endblock content %}

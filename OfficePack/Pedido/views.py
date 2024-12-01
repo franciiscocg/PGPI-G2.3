@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import PedidoForm
@@ -10,6 +10,7 @@ import stripe
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.http import HttpResponseForbidden
+from django.contrib.auth.models import User
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
@@ -17,6 +18,7 @@ importe_minimo_envio_gratuito = 30
 gastos_de_envio = 2.99
 
 @login_required(login_url='/login/')
+@user_passes_test(User.is_staff)
 def crear_pedido(request):
     # comprobamos que el user sea el admin
     if request.user.email != "officepack@gmail.com":
@@ -32,11 +34,10 @@ def crear_pedido(request):
     return render(request, 'crear_pedido.html', {'form': form})
 
 @login_required(login_url='/login/')
+@user_passes_test(User.is_staff)
 def actualizar_pedido(request, pedido_id):
     # comprobamos que el user sea el admin
-    if request.user.email != "officepack@gmail.com":
-        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
-    
+
     if request.method == 'POST':
         form = PedidoForm(request.POST)
         if form.is_valid():
