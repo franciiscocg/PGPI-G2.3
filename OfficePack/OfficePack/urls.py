@@ -49,12 +49,12 @@ urlpatterns = [
     path('catalogo/buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
     path('gestionar_productos/buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
     
-    path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_producto'),
+    path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_productos'),
     path('gestionar_productos/actualizar_producto/<int:producto_id>', viewsProducto.actualizar_producto, name='actualizar_producto'),
     path('gestionar_productos/eliminar_producto/<int:producto_id>', viewsProducto.eliminar_producto, name='eliminar_producto'),
     path('gestionar_productos/crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
     
-    path('gestionar_pedidos/', viewsPedido.listar_pedidos, name='gestionar_productos'),
+    path('gestionar_pedidos/', viewsPedido.listar_pedidos, name='gestionar_pedidos'),
     path('gestionar_pedidos/actualizar_pedido/<int:pedido_id>', viewsPedido.actualizar_pedido, name='actualizar_pedido'),
     path('gestionar_pedidos/eliminar_pedido/<int:pedido_id>', viewsPedido.eliminar_pedido, name='eliminar_pedido'),
     path('gestionar_pedidos/crear_pedido/', viewsPedido.crear_pedido, name='crear_pedido'),
