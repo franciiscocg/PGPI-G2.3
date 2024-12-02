@@ -20,10 +20,6 @@ gastos_de_envio = 2.99
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def crear_pedido(request):
-    # comprobamos que el user sea el admin
-    if request.user.email != "officepack@gmail.com":
-        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
-    
     if request.method == 'POST':
         form = PedidoForm(request.POST)
         if form.is_valid():
@@ -36,7 +32,6 @@ def crear_pedido(request):
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def actualizar_pedido(request, pedido_id):
-    # comprobamos que el user sea el admin
     pedido = get_object_or_404(Pedido, id=pedido_id)
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -49,11 +44,8 @@ def actualizar_pedido(request, pedido_id):
 
 
 @login_required(login_url='/login/')
+@user_passes_test(lambda u: u.is_staff)
 def listar_pedidos(request):
-    # comprobamos que el user sea el admin
-    if request.user.email != "officepack@gmail.com":
-        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
-    
     pedidos = Pedido.objects.all()
     return render(request, 'gestionar_pedidos.html', {'pedidos': pedidos})
 
@@ -71,11 +63,8 @@ def listar_mis_pedidos(request):
 
 
 @login_required(login_url='/login/')
+@user_passes_test(lambda u: u.is_staff)
 def eliminar_pedido(request, pedido_id):
-    # comprobamos que el user sea el admin
-    if request.user.email != "officepack@gmail.com":
-        return HttpResponseForbidden("No tienes autoridad para realizar esta operación")
-    
     pedido = get_object_or_404(Pedido, id=pedido_id)
     if request.method == 'POST':
         pedido.delete()
@@ -228,7 +217,7 @@ def confirmar_pago(request):
                     })
 
             # Si hay stock suficiente, se crea el pedido
-            pedido = Pedido.objects.create(usuario=usuario, importe=total, email=email, direccion=direccion)
+            pedido = Pedido.objects.create(usuario=usuario, importe=total, email=email, direccion=direccion, metodo_pago=metodo_pago)
 
             # Se guarda una copia de la cesta para el mensaje del correo
             productos_comprados = []
@@ -252,7 +241,7 @@ def confirmar_pago(request):
 
             # Enviar correo de confirmación
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola, \n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
+            mensaje = f"Hola,\n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
             mensaje += "\n".join(productos_comprados)
             mensaje += f"\nPara rastrear el pedido, use el número {pedido.pk}"
             mensaje += "\nGracias por tu compra."

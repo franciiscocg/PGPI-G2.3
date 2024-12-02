@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as log
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import CustomLoginForm, CustomUserCreationForm, EditProfileForm
 from Producto.models import Producto
+from django.contrib.auth.models import User
 
 
 def register(request):
@@ -43,17 +44,19 @@ def login(request):
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    user = request.user
+    return render(request, 'profile.html', {'user':user})
 
 @login_required
-def edit_profile(request):
+def edit_profile(request,user_id):
+    user = get_object_or_404(User,id=user_id)
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
+        form = EditProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('/perfil/')
     else:
-        form = EditProfileForm(instance=request.user)
+        form = EditProfileForm(instance=user)
     return render(request, 'edit_profile.html', {'form': form})
 
 

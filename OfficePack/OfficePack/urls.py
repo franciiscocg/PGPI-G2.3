@@ -30,7 +30,7 @@ urlpatterns = [
     path('logout/', viewsUser.signout, name='signout'),
     path('login/', viewsUser.login, name='login'),
     path('perfil/', viewsUser.profile, name='profile'),
-    path('editar_perfil/', viewsUser.edit_profile, name='edit_profile'),
+    path('editar_perfil/<int:user_id>', viewsUser.edit_profile, name='edit_profile'),
 
     path('pedidos/', viewsPedido.listar_pedidos, name='listar_pedidos'),
     path('mis_pedidos/', viewsPedido.listar_mis_pedidos, name='listar_mis_pedidos'),
@@ -46,8 +46,8 @@ urlpatterns = [
 
     path('producto/<int:producto_id>/', viewsProducto.mostrar_producto, name='mostrar_producto'),
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
-    path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
-    path('buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
+    path('catalogo/buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
+    path('gestionar_productos/buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
     
     path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_producto'),
     path('gestionar_productos/actualizar_producto/<int:producto_id>', viewsProducto.actualizar_producto, name='actualizar_producto'),
