@@ -24,6 +24,9 @@ from Producto_pedido import views as viewsProducto_pedido
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('gestionar_usuarios/', viewsUser.gestionar_usuarios, name='gestionar_usuarios'),
+    path('gestionar_usuarios/editar/<int:user_id>/', viewsUser.editar_usuario, name='editar_usuario'),
+    path('gestionar_usuarios/eliminar/<int:user_id>/', viewsUser.eliminar_usuario, name='eliminar_usuario'),
 
     path('', viewsUser.home, name='home'),
     path('register/', viewsUser.register),

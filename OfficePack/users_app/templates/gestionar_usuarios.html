@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestionar Usuarios</title>
+</head>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    li:last-child {
+        border-bottom: none;
+    }
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .user-info span {
+        font-size: 16px;
+        color: #333;
+    }
+    .user-actions {
+        display: flex;
+        gap: 10px;
+    }
+    .user-actions a, .user-actions button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .user-actions button {
+        background-color: #dc3545;
+    }
+    .user-actions a:hover, .user-actions button:hover {
+        opacity: 0.8;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>Gestionar Usuarios</h1>
+        <ul>
+            {% for usuario in usuarios %}
+                <li class="pedido-item">
+                    <span class="pedido-importe">  {{ usuario.email }}</span>
+                    
+                  
+                    <form action="{% url 'editar_usuario' usuario.id %}">
+                        <button type="submit">Actualizar</button>
+                    </form>
+                   
+                    <form action="{% url 'eliminar_usuario' usuario.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+{% endblock content %}
