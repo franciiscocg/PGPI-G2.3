@@ -14,7 +14,7 @@
             <li style="margin-bottom: 10px;"><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
         </ul>
 
-        <form action="{% url 'edit_profile' %}" method="POST" style="text-align: center; margin-top: 20px;">
+        <form action="{% url 'edit_profile' user.id %}" method="POST" style="text-align: center; margin-top: 20px;">
             {% csrf_token %}
             <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Editar perfil</button>
         </form>

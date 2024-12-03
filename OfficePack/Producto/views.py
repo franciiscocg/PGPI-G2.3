@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 @login_required(login_url='/login/') 
 @user_passes_test(lambda u: u.is_staff)
 def gestionar_productos(request):
-    
     productos = Producto.objects.all()
     materiales = set(map(lambda x:x.material, productos))
     fabricantes = set(map(lambda x:x.fabricante, productos))

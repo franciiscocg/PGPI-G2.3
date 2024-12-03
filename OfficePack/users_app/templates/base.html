@@ -424,54 +424,54 @@
             list-style-type: none;
             padding: 0;
         }
-        <style>
-    .grid-container-home {
-        overflow-x: hidden; /* Oculta la barra de desplazamiento horizontal */
-        padding: 20px;
-    }
+        .grid-container-home {
+            overflow-x: hidden; /* Oculta la barra de desplazamiento horizontal */
+            padding: 20px;
+        }
 
-    .horizontal-list {
-        display: flex;
-        flex-wrap: nowrap;
-        padding: 0;
-        list-style: none;
-        justify-content: space-between;
-    }
+        .horizontal-list {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 0;
+            list-style: none;
+            justify-content: space-between;
+        }
 
-    .horizontal-list .product-item-home {
-        flex: 0 0 auto;
-        margin-right: 20px;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        text-align: center;
-        width: 200px;
-    }
+        .horizontal-list .product-item-home {
+            flex: 0 0 auto;
+            margin-right: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            width: 200px;
+        }
 
-    .horizontal-list .product-info-home img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-    }
+        .horizontal-list .product-info-home img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
 
-    .horizontal-list .product-details {
-        margin-top: 10px;
-    }
+        .horizontal-list .product-details {
+            margin-top: 10px;
+        }
 
-    .horizontal-list .product-name {
-        display: block;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
+        .horizontal-list .product-name {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
 
-    .horizontal-list .product-price {
-        display: block;
-        font-size: 14px;
-        color: #878686;
-    }
+        .horizontal-list .product-price {
+            display: block;
+            font-size: 14px;
+            color: #878686;
+        }
+        
 </style>
 
     </style>
@@ -497,6 +497,7 @@
                 {% if user.email == 'officepack@gmail.com' %}
                     <a href="/gestionar_productos">Gestionar Productos</a>
                     <a href="/gestionar_pedidos">Gestionar Pedidos</a>
+                    <a href="/gestionar_usuarios">Gestionar Usuarios</a>
                 {% endif %}
             <a href="/perfil">Perfil</a>
             <a href="/logout">Logout</a>

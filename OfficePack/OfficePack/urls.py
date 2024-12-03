@@ -24,13 +24,16 @@ from Producto_pedido import views as viewsProducto_pedido
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('gestionar_usuarios/', viewsUser.gestionar_usuarios, name='gestionar_usuarios'),
+    path('gestionar_usuarios/editar/<int:user_id>/', viewsUser.editar_usuario, name='editar_usuario'),
+    path('gestionar_usuarios/eliminar/<int:user_id>/', viewsUser.eliminar_usuario, name='eliminar_usuario'),
 
     path('', viewsUser.home, name='home'),
     path('register/', viewsUser.register),
     path('logout/', viewsUser.signout, name='signout'),
     path('login/', viewsUser.login, name='login'),
     path('perfil/', viewsUser.profile, name='profile'),
-    path('editar_perfil/', viewsUser.edit_profile, name='edit_profile'),
+    path('editar_perfil/<int:user_id>', viewsUser.edit_profile, name='edit_profile'),
 
     path('pedidos/', viewsPedido.listar_pedidos, name='listar_pedidos'),
     path('mis_pedidos/', viewsPedido.listar_mis_pedidos, name='listar_mis_pedidos'),
@@ -46,15 +49,15 @@ urlpatterns = [
 
     path('producto/<int:producto_id>/', viewsProducto.mostrar_producto, name='mostrar_producto'),
     path('catalogo/', viewsProducto.listar_productos, name='listar_productos'),
-    path('buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
-    path('buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
+    path('catalogo/buscar/', viewsProducto.buscar_por_nombre, name='buscar_por_nombre'),
+    path('gestionar_productos/buscar/', viewsProducto.buscar_por_nombre_gestionar, name='buscar_por_nombre_gestionar'),
     
-    path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_producto'),
+    path('gestionar_productos/', viewsProducto.gestionar_productos, name='gestionar_productos'),
     path('gestionar_productos/actualizar_producto/<int:producto_id>', viewsProducto.actualizar_producto, name='actualizar_producto'),
     path('gestionar_productos/eliminar_producto/<int:producto_id>', viewsProducto.eliminar_producto, name='eliminar_producto'),
     path('gestionar_productos/crear_producto/', viewsProducto.crear_producto, name='crear_producto'),
     
-    path('gestionar_pedidos/', viewsPedido.listar_pedidos, name='gestionar_productos'),
+    path('gestionar_pedidos/', viewsPedido.listar_pedidos, name='gestionar_pedidos'),
     path('gestionar_pedidos/actualizar_pedido/<int:pedido_id>', viewsPedido.actualizar_pedido, name='actualizar_pedido'),
     path('gestionar_pedidos/eliminar_pedido/<int:pedido_id>', viewsPedido.eliminar_pedido, name='eliminar_pedido'),
     path('gestionar_pedidos/crear_pedido/', viewsPedido.crear_pedido, name='crear_pedido'),
