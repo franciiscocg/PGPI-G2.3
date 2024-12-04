@@ -3,7 +3,11 @@
 {% block content %}
     <div class="container">
         <h1>¡Pedido Confirmado!</h1>
-        <p>Gracias por tu compra, {{ pedido.usuario.username }}. Tu pedido ha sido confirmado con éxito.</p>
+        {% if pedido.usuario %}
+            <p>Gracias por tu compra, {{ pedido.usuario.username }}. Tu pedido ha sido confirmado con éxito.</p>
+        {% else %}
+            <p>Gracias por tu compra. Tu pedido ha sido confirmado con éxito.</p>
+        {% endif %}
         
         <h3>Detalles del Pedido:</h3>
         <ul>
