@@ -12,7 +12,8 @@ from django.contrib.auth.models import User
 @login_required(login_url='/login/') 
 @user_passes_test(lambda u: u.is_staff)
 def gestionar_productos(request):
-    productos = Producto.objects.all()
+    productos = list(Producto.objects.all())
+    productos.sort(key=lambda p:p.fecha, reverse=True)
     materiales = set(map(lambda x:x.material, productos))
     fabricantes = set(map(lambda x:x.fabricante, productos))
 
@@ -40,7 +41,8 @@ def crear_producto(request):
     return render(request, 'crear_producto.html', {'form': form})
 
 def listar_productos(request):
-    productos = Producto.objects.all()
+    productos = list(Producto.objects.all())
+    productos.sort(key=lambda p:p.fecha, reverse=True)
     materiales = set(map(lambda x:x.material, productos))
     fabricantes = set(map(lambda x:x.fabricante, productos))
     return render(request, 'listar_productos.html', {'productos': productos, 'materiales':materiales, 'fabricantes':fabricantes})

@@ -15,7 +15,7 @@ class Producto(models.Model):
     fabricante = models.CharField(max_length=255)
     material = models.CharField(max_length=255)
     tipo = models.CharField(max_length=100)
-    fecha = models.DateField(default=datetime.date(2024,1,1))
+    fecha = models.DateField(default=datetime.date.today())
 
     def __str__(self):
         return self.nombre
