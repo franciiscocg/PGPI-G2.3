@@ -101,7 +101,7 @@ def añadir_a_cesta(request, producto_id):
 def ver_cesta(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
-    return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': round(total, 2)})
+    return render(request, 'ver_cesta.html', {'cesta': cesta, 'total': round(total, 2), 'importe_minimo_envio_gratuito': importe_minimo_envio_gratuito,'gastos_de_envio': gastos_de_envio})
 
 
 def aumentar_cantidad_producto_en_cesta(request, producto_id):
@@ -148,6 +148,7 @@ def pagar(request):
     # Total de la cesta
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
+    total = round(total,2)
 
     # Costes de envío
     if total < importe_minimo_envio_gratuito:
@@ -168,6 +169,7 @@ def pagar(request):
 def confirmar_pago(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
+    total = round(total,2)
 
     # Costes de envío
     if total < importe_minimo_envio_gratuito:

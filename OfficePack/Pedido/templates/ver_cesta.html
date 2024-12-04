@@ -2,6 +2,7 @@
 {% block content %}
 <div id="cesta">
 {% if cesta.items %}
+<p class="cart-minimum">Para disfrutar del envío gratuito, supera los {{importe_minimo_envio_gratuito}}€ en tu compra.</p>
 <div class="cart-container">
     <h1 class="cart-title">Cesta de la Compra</h1>
     <table class="cart-table">
@@ -40,6 +41,11 @@
         </tbody>
     </table>
     <h3 class="cart-total">Total: {{ total }} €</h3>
+    {% if total < importe_minimo_envio_gratuito %}
+        <p class="cart-costs">Gastos de envío: {{gastos_de_envio}} €</p>
+    {% else %}
+    <p class="cart-costs">Gastos de envío: 0.00€</p>
+    {% endif %}
     <a href="{% url 'pagar' %}" class="cart-checkout">Realizar Pedido</a>
 </div>
 {% else %}
