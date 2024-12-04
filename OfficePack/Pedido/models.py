@@ -28,6 +28,7 @@ class Pedido(models.Model):
         choices=MetodoPago.choices,
         default=MetodoPago.TARJETA
     )
+    codigo_rastreo = models.CharField(max_length=16, null=True, blank=True)
 
 
 

@@ -7,6 +7,7 @@ from .models import Pedido
 from Producto.models import Producto
 from Producto_pedido.models import ProductoPedido
 import stripe
+import hashlib, random, string, time
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.http import HttpResponseForbidden
@@ -166,6 +167,22 @@ def pagar(request):
     })
 
 
+def generar_codigo_rastreo(pedido):
+    # Generar un código aleatorio con caracteres alfanuméricos
+    caracteres_aleatorios = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    
+    # Obtener la fecha y hora actual en formato UNIX timestamp
+    timestamp = int(time.time())
+    
+    # Concatenar el ID del pedido, el timestamp y los caracteres aleatorios
+    base_string = f"{pedido.pk}-{timestamp}-{caracteres_aleatorios}"
+    
+    # Hash
+    hash_object = hashlib.sha256(base_string.encode())
+    codigo_rastreo = hash_object.hexdigest().upper()[:16]  # Limitar a 16 caracteres para mayor legibilidad
+    
+    return codigo_rastreo
+
 def confirmar_pago(request):
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
@@ -206,8 +223,6 @@ def confirmar_pago(request):
         else:
             return render(request, 'mensaje_error.html', {'mensaje': 'Método de pago no válido.'})
             
-         
-            
         if intent['status'] == 'succeeded':
             # Verificar el stock antes de crear el pedido
             for producto_id, item in cesta.items():
@@ -220,6 +235,13 @@ def confirmar_pago(request):
 
             # Si hay stock suficiente, se crea el pedido
             pedido = Pedido.objects.create(usuario=usuario, importe=total, email=email, direccion=direccion, metodo_pago=metodo_pago)
+
+            # Generar el código de rastreo
+            codigo_rastreo = generar_codigo_rastreo(pedido)
+
+            # Guardar el código de rastreo en el pedido
+            pedido.codigo_rastreo = codigo_rastreo
+            pedido.save()
 
             # Se guarda una copia de la cesta para el mensaje del correo
             productos_comprados = []
@@ -245,7 +267,7 @@ def confirmar_pago(request):
             asunto = 'Confirmación de Pedido'
             mensaje = f"Hola,\n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
             mensaje += "\n".join(productos_comprados)
-            mensaje += f"\nPara rastrear el pedido, use el número {pedido.pk}"
+            mensaje += f"\nPara rastrear el pedido, usa el código: {codigo_rastreo}\n"
             mensaje += "\nGracias por tu compra."
 
             from_email = settings.DEFAULT_FROM_EMAIL
@@ -257,7 +279,8 @@ def confirmar_pago(request):
                 # Se maneja posible error de envío de correo
                 return render(request, 'mensaje_error.html', {'mensaje': f"Hubo un problema al enviar el correo: {str(e)}"})
 
-            return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+            return render(request, 'pedido_confirmado.html', {'pedido': pedido, 'codigo_rastreo': codigo_rastreo})
+
         else:
             return render(request, 'mensaje_error.html', {'mensaje': 'Hubo un error con tu pago. Intenta nuevamente.'})
 
