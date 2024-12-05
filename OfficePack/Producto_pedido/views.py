@@ -12,9 +12,9 @@ def rastrear_pedido(request):
     error = None
 
     if request.method == 'POST':
-        pedido_id = request.POST.get('pedido_id')
+        codigo = request.POST.get('codigo_rastreo')
         try:
-            pedido = Pedido.objects.get(id=pedido_id)
+            pedido = Pedido.objects.get(codigo_rastreo=codigo)
         except Pedido.DoesNotExist:
             error = "No se encontró ningún pedido con ese ID."
 
