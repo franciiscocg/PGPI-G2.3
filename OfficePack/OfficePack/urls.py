@@ -64,4 +64,9 @@ urlpatterns = [
 
     path('rastrear/', viewsProducto_pedido.rastrear_pedido, name='rastrear_pedido'),
     path('rastrear/cambiar_direccion/<int:pedido_id>', viewsProducto_pedido.cambiar_direccion, name='cambiar_direccion'),
+    path('compra_rapida/<int:producto_id>/', viewsProducto.compra_rapida, name='compra_rapida'),
+
+
+
+    
 ]

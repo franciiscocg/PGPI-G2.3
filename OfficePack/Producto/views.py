@@ -47,6 +47,22 @@ def listar_productos(request):
     fabricantes = set(map(lambda x:x.fabricante, productos))
     return render(request, 'listar_productos.html', {'productos': productos, 'materiales':materiales, 'fabricantes':fabricantes})
 
+def compra_rapida(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    if 'cesta' not in request.session:
+        request.session['cesta'] = {}
+    cesta = request.session['cesta']
+    if producto.cantidad_almacen >= 1:
+        cesta[str(producto_id)] = {
+            'nombre': producto.nombre,
+            'foto': producto.foto,
+            'precio': float(producto.precio),
+            'cantidad': 1
+        }
+        request.session.modified = True
+    else:
+        return render(request, 'mensaje_error.html', {'mensaje': 'Este producto está agotado.'})
+    return redirect('pagar')
 
 def listar_producto(request, id):
     pedido = get_object_or_404(Producto, id=id)
