@@ -309,9 +309,6 @@ def confirmar_pago(request):
             </head>
                         <body>
                 <div class="container">
-                    <div class="header">
-                        <img src="https://example.com/logo.png" alt="OfficePack Logo">
-                    </div>
                     <div class="content">
                         <h2>Confirmación de Pedido</h2>
                         <p>Hola,</p>
