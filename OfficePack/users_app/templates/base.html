@@ -368,6 +368,9 @@
         }
         
     /* Estilos gestionar_productos */
+        .gestionar-productos {
+            margin-top: 5vh;
+        }
         .crear_producto {
             text-align:center;
         }
@@ -389,6 +392,9 @@
         }
 
     /* Estilos gestionar_pedidos */
+        .gestionar-pedidos {
+            margin-top: 5vh;
+        }
         .crear_pedido {
             text-align:center;
             margin-bottom: 4vh;
@@ -424,7 +430,7 @@
         }
         .pedido-item a {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 17.5vw 10vw 17.5vw 5vw;
             gap: 20px;
             padding: 1vh;
             margin: 1vh;
@@ -433,13 +439,11 @@
             font-size: 18px;
             font-weight: bold;
             color: #000000;
-            margin-bottom: 5px;
         }
         .pedido-importe, 
         .pedido-direccion, 
         .pedido-estado {
             color: #010101;
-            margin-bottom: 10px;
         }
 
     /* Estilos listar_productos */
@@ -452,6 +456,11 @@
         }
 
     /* Estilos mostrar pedido */
+        .mostrar-pedido {
+            width: 70%;
+            margin: 0 auto;
+            margin-top: 5vh;
+        }
         .product-list-pedido {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -459,12 +468,15 @@
             list-style-type: none;
             padding: 0;
         }
+        
+    /* estilos home */
         .grid-container-home {
             overflow-x: hidden; /* Oculta la barra de desplazamiento horizontal */
             padding: 20px;
         }
-
         .horizontal-list {
+            margin: 0 auto;
+            width: 80%;
             display: flex;
             flex-wrap: nowrap;
             padding: 0;

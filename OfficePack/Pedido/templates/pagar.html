@@ -11,6 +11,18 @@
 <body>
     <div class="container">
         <h1>Pagar Pedido</h1>
+        {% if not request.user.is_authenticated %}
+            <div class="pagar-login">
+                <p>Para mayor comodidad,</p>
+                <form class="pagar-login-form" action="{% url 'login' %}">
+                    <button>Inicia sesión</button>
+                </form>
+                <p>o</p>
+                <form class="pagar-register-form" action="{% url 'register' %}">
+                    <button>Regístrate</button>
+                </form> 
+            </div>
+        {% endif %}
         <form id="payment-form" method="POST" action="{% url 'confirmar_pago' %}">
             {% csrf_token %}
 

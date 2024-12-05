@@ -29,7 +29,7 @@ urlpatterns = [
     path('gestionar_usuarios/eliminar/<int:user_id>/', viewsUser.eliminar_usuario, name='eliminar_usuario'),
 
     path('', viewsUser.home, name='home'),
-    path('register/', viewsUser.register),
+    path('register/', viewsUser.register, name='register'),
     path('logout/', viewsUser.signout, name='signout'),
     path('login/', viewsUser.login, name='login'),
     path('perfil/', viewsUser.profile, name='profile'),
