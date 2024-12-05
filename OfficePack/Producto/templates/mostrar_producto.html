@@ -61,5 +61,9 @@
         <button ><a href="/gestionar_productos/actualizar_producto/{{producto.id}}">Editar producto</a></button>
         <button class="delete-button"><a href="/gestionar_productos/eliminar_producto/{{producto.id}}">Eliminar producto</a></button>
         {% endif %}
+        <form action="{% url 'compra_rapida' producto.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Compra Rápida</button>
+        </form>
     </div>
 {% endblock content %}

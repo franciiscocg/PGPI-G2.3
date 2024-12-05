@@ -37,6 +37,10 @@
                             <input type="number" name="cantidad" value="1" min="1" max="{{ producto.cantidad_almacen }}">
                             <button type="submit">Añadir a la cesta</button>
                         </form>
+                        <form action="{% url 'compra_rapida' producto.id %}" method="post" class="add-to-cart">
+                            {% csrf_token %}
+                            <button type="submit" class="compra-rapida-button">Compra Rápida</button>
+                        </form>
                     {% else %}
                         <h4 class="agotado">AGOTADO</h4>
                     {% endif %}

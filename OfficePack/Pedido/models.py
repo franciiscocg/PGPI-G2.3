@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 
 class EstadoPedido(models.TextChoices):
@@ -29,7 +30,7 @@ class Pedido(models.Model):
         default=MetodoPago.TARJETA
     )
     codigo_rastreo = models.CharField(max_length=16, null=True, blank=True)
-
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
 
 
 def __str__(self):

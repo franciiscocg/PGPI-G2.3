@@ -165,7 +165,7 @@ def pagar(request):
         'stripe_public_key': settings.STRIPE_TEST_PUBLIC_KEY,
         'client_secret': intent.client_secret,
     })
-
+    
 
 def generar_codigo_rastreo(pedido):
     # Generar un código aleatorio con caracteres alfanuméricos
@@ -262,19 +262,82 @@ def confirmar_pago(request):
             # Vaciar la cesta
             request.session['cesta'] = {}
             request.session.modified = True
-
-            # Enviar correo de confirmación
+            
+            fecha_pedido_formateada = pedido.fecha_pedido.strftime('%d/%m/%Y %H:%M')
+            # Crear el cuerpo del correo electronico 
             asunto = 'Confirmación de Pedido'
-            mensaje = f"Hola,\n\nTu pedido ha sido confirmado. El importe total es {total}.\n\nLos productos comprados son:\n"
-            mensaje += "\n".join(productos_comprados)
-            mensaje += f"\nPara rastrear el pedido, usa el código: {codigo_rastreo}\n"
-            mensaje += "\nGracias por tu compra."
+            mensaje_html = f"""
+            <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                    }}
+                    .container {{
+                        width: 80%;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }}
+                    .header {{
+                        text-align: center;
+                        padding: 10px 0;
+                    }}
+                    .header img {{
+                        max-width: 150px;
+                    }}
+                    .content {{
+                        margin-top: 20px;
+                    }}
+                    .content h2 {{
+                        color: #007bff;
+                    }}
+                    .content p {{
+                        line-height: 1.6;
+                    }}
+                    .footer {{
+                        text-align: center;
+                        margin-top: 20px;
+                        padding: 10px 0;
+                        border-top: 1px solid #ddd;
+                    }}
+                </style>
+            </head>
+                        <body>
+                <div class="container">
+                    <div class="header">
+                        <img src="https://example.com/logo.png" alt="OfficePack Logo">
+                    </div>
+                    <div class="content">
+                        <h2>Confirmación de Pedido</h2>
+                        <p>Hola,</p>
+                        <p>Tu pedido ha sido confirmado. El importe total es {total} €.</p>
+                        <p>Los productos comprados son:</p>
+                        <ul>
+                            {''.join([f'<li>{producto}</li>' for producto in productos_comprados])}
+                        </ul>
+                        <p><strong>Fecha del Pedido:</strong> {fecha_pedido_formateada}</p>
+                        <p>Para rastrear el pedido, usa el código: <strong>{codigo_rastreo}</strong></p>
+                        <p>Gracias por tu compra.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; 2024 OfficePack. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+
 
             from_email = settings.DEFAULT_FROM_EMAIL
             to_email = email  # El correo proporcionado por el usuario no autenticado
 
             try:
-                send_mail(asunto, mensaje, from_email, [to_email])
+                send_mail(asunto, '', from_email, [to_email], html_message=mensaje_html)
             except Exception as e:
                 # Se maneja posible error de envío de correo
                 return render(request, 'mensaje_error.html', {'mensaje': f"Hubo un problema al enviar el correo: {str(e)}"})

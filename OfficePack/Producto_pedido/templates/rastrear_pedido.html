@@ -23,6 +23,7 @@
         <p><strong>Importe:</strong> {{ pedido.importe }} €</p>
         <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
         <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+        <p><strong>Fecha del Pedido:</strong> {{ pedido.fecha_pedido }}</p>
         <p><strong>Método de Pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
 
         <h3>Productos en el Pedido</h3>
