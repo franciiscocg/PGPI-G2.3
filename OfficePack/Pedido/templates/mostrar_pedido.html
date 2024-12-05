@@ -3,31 +3,34 @@
 {% block title %}Detalle del Pedido{% endblock %}
 
 {% block content %}
-    <h1>Detalles del Pedido</h1>
+    <div class="mostrar-pedido container">
+        <h1>Detalles del Pedido</h1>
 
-    <p><strong>ID del Pedido:</strong> {{ pedido.id }}</p>
-    {% if pedido.usuario != null %}
-        <p><strong>Usuario:</strong> {{ pedido.usuario.username }}</p>
-    {% endif %} 
-    <p><strong>Email:</strong> {{ pedido.email }}</p>
-    <p><strong>Importe:</strong> ${{ pedido.importe }}</p>
-    <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
-    <p><strong>Estado de Envío:</strong> {{ pedido.estado }}</p>
+        <p><strong>ID del Pedido:</strong> {{ pedido.id }}</p>
+        <p><strong>Código de rastreo:</strong> {{ pedido.codigo_rastreo }}</p>
+        {% if pedido.usuario != null %}
+            <p><strong>Usuario:</strong> {{ pedido.usuario.username }}</p>
+        {% endif %} 
+        <p><strong>Email:</strong> {{ pedido.email }}</p>
+        <p><strong>Importe:</strong> ${{ pedido.importe }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+        <p><strong>Estado de Envío:</strong> {{ pedido.estado }}</p>
 
-    <ul class="product-list-pedido">
-        {% for producto in productos %}
-            <li class="product-item">
-                <div class="product-info">
-                    <a href="{% url 'mostrar_producto' producto.producto.id %}">
-                        <img src="{{ producto.producto.foto }}" alt="{{ producto.producto.nombre }}">
-                        <span class="product-name">{{ producto.producto.nombre }}</span>
-                    </a>
-                    <span class="product-price">{{ producto.precio_unitario }} €</span>
-                    <span class="product-price">Cantidad: {{ producto.cantidad }} u</span>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+        <ul class="product-list-pedido">
+            {% for producto in productos %}
+                <li class="product-item">
+                    <div class="product-info">
+                        <a href="{% url 'mostrar_producto' producto.producto.id %}">
+                            <img src="{{ producto.producto.foto }}" alt="{{ producto.producto.nombre }}">
+                            <span class="product-name">{{ producto.producto.nombre }}</span>
+                        </a>
+                        <span class="product-price">{{ producto.precio_unitario }} €</span>
+                        <span class="product-price">Cantidad: {{ producto.cantidad }} u</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
 
-    <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+        <a href="{% url 'listar_pedidos' %}">Volver a la lista de pedidos</a>
+    </div>
 {% endblock %}

@@ -6,7 +6,7 @@
     <form method="POST">
         {% csrf_token %}
         <div>
-            <label for="pedido_id">ID del Pedido</label>
+            <label for="pedido_id">Código de rastreo</label>
             <input type="text" id="codigo_rastreo" name="codigo_rastreo" required>
         </div>
         <button type="submit">Buscar</button>
@@ -27,9 +27,18 @@
         <p><strong>Método de Pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
 
         <h3>Productos en el Pedido</h3>
-        <ul>
-            {% for producto_pedido in productos_pedido %}
-                <li>{{ producto_pedido.cantidad }} x {{ producto_pedido.producto.nombre }} a {{ producto_pedido.precio_unitario }} € cada uno</li>
+        <ul class="product-list-pedido">
+            {% for producto in productos %}
+                <li class="product-item">
+                    <div class="product-info">
+                        <a href="{% url 'mostrar_producto' producto.producto.id %}">
+                            <img src="{{ producto.producto.foto }}" alt="{{ producto.producto.nombre }}">
+                            <span class="product-name">{{ producto.producto.nombre }}</span>
+                        </a>
+                        <span class="product-price">{{ producto.precio_unitario }} €</span>
+                        <span class="product-price">Cantidad: {{ producto.cantidad }} u</span>
+                    </div>
+                </li>
             {% endfor %}
         </ul>
 

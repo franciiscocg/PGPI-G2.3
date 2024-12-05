@@ -15,12 +15,13 @@ def rastrear_pedido(request):
         codigo = request.POST.get('codigo_rastreo')
         try:
             pedido = Pedido.objects.get(codigo_rastreo=codigo)
+            productos_pedido = ProductoPedido.objects.filter(pedido=pedido)
         except Pedido.DoesNotExist:
             error = "No se encontró ningún pedido con ese ID."
 
     return render(request, 'rastrear_pedido.html', {
         'pedido': pedido,
-        'productos_pedido': productos_pedido,
+        'productos': productos_pedido,
         'error': error
     })
 
