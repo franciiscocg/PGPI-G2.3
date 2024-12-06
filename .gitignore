@@ -1,0 +1,26 @@
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+env/
+venv/
+ENV/
+VENV/
+
+# Archivos de configuración del IDE
+.idea/
+.vscode/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de cobertura de código
+.coverage
+*.cover
+
+# Base de datos en desarrollo
+db.sqlite3

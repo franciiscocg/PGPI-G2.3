@@ -18,6 +18,7 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=255)
     importe = models.DecimalField(max_digits=10, decimal_places=2)
+    direccion = models.CharField(max_length=200)
     estado = models.CharField(
         max_length=2,
         choices=EstadoPedido.choices,

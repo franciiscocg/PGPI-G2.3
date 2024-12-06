@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-
+from django.utils import timezone
 
 
 class Producto(models.Model):
@@ -16,7 +16,7 @@ class Producto(models.Model):
     fabricante = models.CharField(max_length=255)
     material = models.CharField(max_length=255)
     tipo = models.CharField(max_length=100)
-    fecha = models.DateField(default=datetime.date.today())
+    fecha = models.DateField(default=timezone.now)
 
     def __str__(self):
         return self.nombre

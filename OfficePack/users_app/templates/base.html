@@ -578,7 +578,7 @@
             <a href="/rastrear">Rastrear Pedido</a>
 
             {% if user.is_authenticated %}
-                {% if user.email == 'officepack@gmail.com' %}
+                {% if user.is_staff %}
                     <a href="/gestionar_productos">Gestionar Productos</a>
                     <a href="/gestionar_pedidos">Gestionar Pedidos</a>
                     <a href="/gestionar_usuarios">Gestionar Usuarios</a>
