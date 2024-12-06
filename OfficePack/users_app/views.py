@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as log
-from django.contrib.auth import logout, authenticate, get_user_model
+from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CustomLoginForm, CustomUserCreationForm, EditProfileForm
 from Producto.models import Producto
@@ -53,7 +53,7 @@ def profile(request):
 
 @login_required
 def edit_profile(request, user_id):
-    user = get_object_or_404(get_user_model(), id=user_id)
+    user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=user)
         if form.is_valid():
@@ -67,13 +67,13 @@ def edit_profile(request, user_id):
 login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def gestionar_usuarios(request):
-    usuarios = get_user_model().objects.all()
+    usuarios = User.objects.all()
     return render(request, 'gestionar_usuarios.html', {'usuarios': usuarios})
 
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def editar_usuario(request, user_id):
-    usuario = get_object_or_404(get_user_model(), id=user_id)
+    usuario = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         usuario.username = request.POST.get('username')
         usuario.email = request.POST.get('email')
@@ -85,7 +85,7 @@ def editar_usuario(request, user_id):
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def eliminar_usuario(request, user_id):
-    usuario = get_object_or_404(get_user_model(), id=user_id)
+    usuario = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         usuario.delete()
         messages.success(request, 'Usuario eliminado correctamente.')

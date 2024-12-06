@@ -159,5 +159,3 @@ SECURE_SSL_REDIRECT = False
 
 # PORT para Rende
 PORT = int(os.environ.get('PORT', 8000))
-
-AUTH_USER_MODEL = 'users_app.CustomUser'

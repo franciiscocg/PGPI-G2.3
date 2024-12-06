@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
-from django.conf import settings
 
 
 class EstadoPedido(models.TextChoices):
@@ -16,7 +15,7 @@ class MetodoPago(models.TextChoices):
     CONTRAREEMBOLSO = 'C', 'Contra Reembolso'
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=255)
     importe = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     direccion = models.CharField(max_length=200)
