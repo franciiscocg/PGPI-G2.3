@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User
+from Direccion.models import Direccion
 
 stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
 
@@ -146,6 +147,12 @@ def obtener_cesta(request):
 
 
 def pagar(request):
+    
+    direccion = Direccion(calle = "Calle", pais = "Pais", codigo_postal = "Codigo Postal", ciudad = "Ciudad")
+    
+    if request.user.is_authenticated:
+        direccion = get_object_or_404(Direccion, user=request.user.id)
+    
     # Total de la cesta
     cesta = request.session.get('cesta', {})
     total = sum(item['precio'] * item['cantidad'] for item in cesta.values())
@@ -164,6 +171,7 @@ def pagar(request):
     return render(request, 'pagar.html', {
         'stripe_public_key': settings.STRIPE_TEST_PUBLIC_KEY,
         'client_secret': intent.client_secret,
+        'direccion': direccion,
     })
     
 
@@ -182,6 +190,7 @@ def generar_codigo_rastreo(pedido):
     codigo_rastreo = hash_object.hexdigest().upper()[:16]  # Limitar a 16 caracteres para mayor legibilidad
     
     return codigo_rastreo
+
 
 def confirmar_pago(request):
     cesta = request.session.get('cesta', {})

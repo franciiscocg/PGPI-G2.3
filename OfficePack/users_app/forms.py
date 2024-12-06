@@ -35,4 +35,4 @@ class CustomLoginForm(AuthenticationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username']
+        fields = ['first_name', 'email', 'last_name', 'username']

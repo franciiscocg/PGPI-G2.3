@@ -12,6 +12,10 @@
             <form method="post" enctype="multipart/form-data" style="padding: 20px;"> 
                 {% csrf_token %}
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="email" style="display: block; margin-bottom: 5px;">Correo electrónico</label>
+                    <input id="email" type="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ usuario.email }}" readonly style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label for="username" style="display: block; margin-bottom: 5px;">Nombre de usuario</label>
                     <input id="username" type="text" name="username" class="form-control" placeholder="Nombre de usuario" value="{{ usuario.username }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
@@ -23,6 +27,7 @@
                     <label for="last_name" style="display: block; margin-bottom: 5px;">Apellidos</label>
                     <input id="last_name" type="text" name="last_name" class="form-control" placeholder="Apellidos" value="{{ usuario.last_name }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
+                {{ direccion_form.as_p }}
                 <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Actualizar perfil</button>
             </form>
         </div>

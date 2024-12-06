@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Producto_pedido',
     'users_app',
     'sslserver',
+    'Direccion',
 ]
 
 MIDDLEWARE = [

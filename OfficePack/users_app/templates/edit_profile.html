@@ -8,6 +8,10 @@
             <form method="post" enctype="multipart/form-data" style="padding: 20px;"> 
                 {% csrf_token %}
                 <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="email" style="display: block; margin-bottom: 5px;">Correo electrónico</label>
+                    <input id="email" type="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ user.email }}" readonly style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
                     <label for="username" style="display: block; margin-bottom: 5px;">Nombre de usuario</label>
                     <input id="username" type="text" name="username" class="form-control" placeholder="Nombre de usuario" value="{{ user.username }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
@@ -18,6 +22,22 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="last_name" style="display: block; margin-bottom: 5px;">Apellidos</label>
                     <input id="last_name" type="text" name="last_name" class="form-control" placeholder="Apellidos" value="{{ user.last_name }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="calle" style="display: block; margin-bottom: 5px;">Calle</label>
+                    <input id="calle" type="text" name="calle" class="form-control" placeholder="Calle ejemplo 00 0X" value="{{ direccion.calle }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="pais" style="display: block; margin-bottom: 5px;">Pais</label>
+                    <input id="pais" type="text" name="pais" class="form-control" placeholder="Pais" value="{{ direccion.pais }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="codigo_postal" style="display: block; margin-bottom: 5px;">Codigo postal</label>
+                    <input id="codigo_postal" type="text" name="codigo_postal" class="form-control" placeholder="00000" value="{{ direccion.codigo_postal }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="ciudad" style="display: block; margin-bottom: 5px;">Ciudad</label>
+                    <input id="ciudad" type="text" name="ciudad" class="form-control" placeholder="ciudad" value="{{ direccion.ciudad }}" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
                 </div>
                 <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Actualizar perfil</button>
             </form>

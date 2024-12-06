@@ -3,9 +3,11 @@ from django.contrib.auth import login as log
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CustomLoginForm, CustomUserCreationForm, EditProfileForm
+from Direccion.forms import EditDireccionForm
 from Producto.models import Producto
 from django.contrib.auth.models import User
 from django.contrib import messages
+from Direccion.models import Direccion
 
 
 def register(request):
@@ -46,22 +48,40 @@ def login(request):
 
     return render(request, 'login.html', {'form': form})
 
+
 @login_required
 def profile(request):
-    user = request.user
-    return render(request, 'profile.html', {'user': user})
+    direccion, created = Direccion.objects.get_or_create(user=request.user, defaults={
+        'calle': 'Calle',
+        'pais': 'País',
+        'codigo_postal': 00000,
+        'ciudad': 'Ciudad'
+    })
+    return render(request, 'profile.html', {'user': request.user, 'direccion': direccion})
+
 
 @login_required
 def edit_profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+    usuario = get_object_or_404(User, id=user_id)
+    direccion = get_object_or_404(Direccion, user=usuario)
+
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
+        user_form = EditProfileForm(request.POST, instance=usuario)
+        direccion_form = EditDireccionForm(request.POST, instance=direccion)
+
+        if user_form.is_valid() and direccion_form.is_valid():
+            user_form.save()
+            direccion_form.save()
             return redirect('/perfil/')
     else:
-        form = EditProfileForm(instance=user)
-    return render(request, 'edit_profile.html', {'form': form})
+        user_form = EditProfileForm(instance=usuario)
+        direccion_form = EditDireccionForm(instance=direccion)
+
+    return render(request, 'edit_profile.html', {
+        'direccion': direccion,
+        'user_form': user_form,
+        'direccion_form': direccion_form
+    })
 
 
 login_required(login_url='/login/')
@@ -70,17 +90,37 @@ def gestionar_usuarios(request):
     usuarios = User.objects.all()
     return render(request, 'gestionar_usuarios.html', {'usuarios': usuarios})
 
+
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
 def editar_usuario(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
+    direccion = get_object_or_404(Direccion, user=usuario)
+
     if request.method == 'POST':
-        usuario.username = request.POST.get('username')
-        usuario.email = request.POST.get('email')
-        usuario.save()
-        messages.success(request, 'Usuario actualizado correctamente.')
-        return redirect('gestionar_usuarios')
-    return render(request, 'editar_usuario.html', {'usuario': usuario})
+        usuario.username = request.POST['username']
+        usuario.email = request.POST['email']
+        usuario.last_name = request.POST['last_name']
+        usuario.first_name = request.POST['first_name']
+        
+        user_form = EditProfileForm(request.POST, instance=usuario)
+        direccion_form = EditDireccionForm(request.POST, instance=direccion)
+
+        if user_form.is_valid() and direccion_form.is_valid():
+            user_form.save()
+            direccion_form.save()
+            messages.success(request, 'Usuario y dirección actualizados correctamente.')
+            return redirect('gestionar_usuarios')
+    else:
+        user_form = EditProfileForm(instance=usuario)
+        direccion_form = EditDireccionForm(instance=direccion)
+
+    return render(request, 'editar_usuario.html', {
+        'usuario': usuario,
+        'user_form': user_form,
+        'direccion_form': direccion_form
+    })
+
 
 @login_required(login_url='/login/')
 @user_passes_test(lambda u: u.is_staff)
