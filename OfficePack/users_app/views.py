@@ -35,7 +35,10 @@ def login(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 log(request, user)
-                return redirect('home')  # Redirigir al home después de iniciar sesión
+                next_url = request.POST.get('next', 'home')
+                if next_url == '':
+                    next_url = 'home'
+                return redirect(next_url)  # Redirigir a la URL anterior o a home
             else:
                 form.add_error(None, "Correo electrónico o contraseña incorrectos.")  # Error en caso de fallo de autenticación
     else:
@@ -46,11 +49,11 @@ def login(request):
 @login_required
 def profile(request):
     user = request.user
-    return render(request, 'profile.html', {'user':user})
+    return render(request, 'profile.html', {'user': user})
 
 @login_required
-def edit_profile(request,user_id):
-    user = get_object_or_404(User,id=user_id)
+def edit_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=user)
         if form.is_valid():
