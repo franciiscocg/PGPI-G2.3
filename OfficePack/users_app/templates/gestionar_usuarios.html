@@ -65,19 +65,21 @@
         <h1>Gestionar Usuarios</h1>
         <ul>
             {% for usuario in usuarios %}
-                <li class="pedido-item">
-                    <span class="pedido-importe">  {{ usuario.email }}</span>
+                {% if not usuario.is_staff %}
+                    <li class="pedido-item">
+                        <span class="pedido-importe">  {{ usuario.email }}</span>
+                        
                     
-                  
-                    <form action="{% url 'editar_usuario' usuario.id %}">
-                        <button type="submit">Actualizar</button>
-                    </form>
-                   
-                    <form action="{% url 'eliminar_usuario' usuario.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Eliminar</button>
-                    </form>
-                </li>
+                        <form action="{% url 'editar_usuario' usuario.id %}">
+                            <button type="submit">Actualizar</button>
+                        </form>
+                    
+                        <form action="{% url 'eliminar_usuario' usuario.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>
