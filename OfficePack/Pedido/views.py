@@ -151,7 +151,10 @@ def pagar(request):
     direccion = Direccion(calle = "Calle", pais = "Pais", codigo_postal = "Codigo Postal", ciudad = "Ciudad")
     
     if request.user.is_authenticated:
-        direccion = get_object_or_404(Direccion, user=request.user.id)
+        try:
+            direccion = get_object_or_404(Direccion, user=request.user)
+        except:
+            print('Dirección no encontrada')
     
     # Total de la cesta
     cesta = request.session.get('cesta', {})
