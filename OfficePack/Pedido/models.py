@@ -17,8 +17,7 @@ class MetodoPago(models.TextChoices):
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(max_length=255)
-    importe = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    direccion = models.CharField(max_length=200)
+    importe = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(
         max_length=2,
         choices=EstadoPedido.choices,
@@ -33,5 +32,5 @@ class Pedido(models.Model):
     fecha_pedido = models.DateTimeField(auto_now_add=True)
 
 
-def __str__(self):
-    return f'Pedido {self.id} - {self.email}'
+    def __str__(self):
+        return f'Pedido {self.id} - {self.email}'

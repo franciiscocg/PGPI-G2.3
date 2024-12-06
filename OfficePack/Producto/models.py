@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 
 
+
 class Producto(models.Model):
     class TipoChoices(models.TextChoices):
         MUEBLE = 'MUEBLE', 'Mueble'
