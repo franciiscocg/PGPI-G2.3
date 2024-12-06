@@ -63,7 +63,10 @@ def profile(request):
 @login_required
 def edit_profile(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
-    direccion = get_object_or_404(Direccion, user=usuario)
+    try:
+        direccion = get_object_or_404(Direccion, user=request.user)
+    except:
+        direccion = Direccion(calle = "", pais = "", codigo_postal = "", ciudad = "")
 
     if request.method == 'POST':
         user_form = EditProfileForm(request.POST, instance=usuario)
@@ -95,7 +98,10 @@ def gestionar_usuarios(request):
 @user_passes_test(lambda u: u.is_staff)
 def editar_usuario(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
-    direccion = get_object_or_404(Direccion, user=usuario)
+    try:
+        direccion = get_object_or_404(Direccion, user=request.user)
+    except:
+        direccion = Direccion(calle = "", pais = "", codigo_postal = "C", ciudad = "")
 
     if request.method == 'POST':
         usuario.username = request.POST['username']
