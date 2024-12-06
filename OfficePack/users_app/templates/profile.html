@@ -12,6 +12,7 @@
             <li style="margin-bottom: 10px;"><strong>Correo electrónico:</strong> {{ user.email }}</li>
             <li style="margin-bottom: 10px;"><strong>Fecha de creación de cuenta:</strong> {{ user.date_joined }}</li>
             <li style="margin-bottom: 10px;"><strong>Último inicio de sesión:</strong> {{ user.last_login }}</li>
+            <li style="margin-bottom: 10px;"><strong>Direccion</strong> {{ user.direccion }}</li>
         </ul>
 
         <form action="{% url 'edit_profile' user.id %}" method="POST" style="text-align: center; margin-top: 20px;">
