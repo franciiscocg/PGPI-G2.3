@@ -11,6 +11,9 @@ def carga_inicial(apps, schema_editor):
         is_staff=True
     )
 
+def reverse(apps, schema_editor):
+    User.objects.all().delete()
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -18,5 +21,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(carga_inicial),
+        migrations.RunPython(carga_inicial, reverse_code=reverse),
     ]
