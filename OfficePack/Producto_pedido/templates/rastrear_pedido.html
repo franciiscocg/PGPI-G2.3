@@ -42,15 +42,17 @@
             {% endfor %}
         </ul>
 
-        {% if pedido.estado == "P" or pedido.estado == "EP" %}
-            <form action="{% url 'cambiar_direccion' pedido.id %}" method="post">
-                {% csrf_token %}
-                <div>
-                    <label>Nueva dirección de entrega</label>
-                    <input type="text" name="direccion" id="direccion">
-                </div>
-                <button type="submit">Cambiar dirección</button>
-            </form>
+        {% if user.is_authenticated %}
+            {% if pedido.estado == "P" or pedido.estado == "EP" %}
+                <form action="{% url 'cambiar_direccion' pedido.id %}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <label>Nueva dirección de entrega</label>
+                        <input type="text" name="direccion" id="direccion">
+                    </div>
+                    <button type="submit">Cambiar dirección</button>
+                </form>
+            {% endif %}
         {% endif %}
     {% endif %}
 </div>

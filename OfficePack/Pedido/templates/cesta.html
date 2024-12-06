@@ -56,7 +56,10 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="/cesta" class="cart-checkout">Ver cesta</a>
+    <div class="inline-cart-buttons">
+        <a href="/cesta" class="cart-checkout">Ver cesta</a>
+        <a href="{% url 'pagar' %}" class="cart-checkout">Realizar Pedido</a>
+    </div>
 </div>
 {% else %}
     <p class="cart-empty">Tu carrito está vacío. ¡Agrega productos para comenzar!</p>
