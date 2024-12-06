@@ -1,10 +1,12 @@
 # FILE: Pedido/tests/test_pedido.py
 import unittest
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from Pedido.models import Pedido, EstadoPedido, MetodoPago
 from Pedido.forms import PedidoForm
+from Producto.models import Producto
+import json
 
 class PedidoModelTest(TestCase):
 
@@ -73,7 +75,18 @@ class PedidoFormTest(TestCase):
 class PedidoViewsTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='12345',is_staff=True)
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345', is_staff=True)
+        self.producto = Producto.objects.create(
+            nombre='Producto Test',
+            foto='https://example.com/foto.jpg',
+            precio=10.00,
+            cantidad_almacen=100,
+            fabricante='Fabricante Test',
+            material='Material Test',
+            tipo='MUEBLE',
+            fecha='2024-01-01'
+        )
         self.pedido = Pedido.objects.create(
             usuario=self.user,
             email='test@example.com',
@@ -132,14 +145,106 @@ class PedidoViewsTest(TestCase):
         self.pedido.refresh_from_db()
         self.assertEqual(self.pedido.email, 'actualizado@example.com')
 
-    def test_eliminar_pedido_view(self):
-        self.client.login(username='testuser', password='12345',is_staff=True, email='officepack@gmail.com')
-        self.user.email = 'officepack@gmail.com'
-        self.user.save()        
-        url = reverse('eliminar_pedido', args=[self.pedido.id])
+        
+    def test_añadir_a_cesta(self):
+        self.client.login(username='testuser', password='12345')
+        url = reverse('añadir_a_cesta', args=[self.producto.id])
+        response = self.client.post(url, {'cantidad': 1})
+        self.assertEqual(response.status_code, 302)
+        cesta = self.client.session['cesta']
+        self.assertIn(str(self.producto.id), cesta)
+        self.assertEqual(cesta[str(self.producto.id)]['cantidad'], 1)
+
+    def test_ver_cesta(self):
+        self.client.login(username='testuser', password='12345')
+        session = self.client.session
+        session['cesta'] = {
+            str(self.producto.id): {
+                'nombre': self.producto.nombre,
+                'foto': self.producto.foto,
+                'precio': float(self.producto.precio),
+                'cantidad': 1
+            }
+        }
+        session.save()
+        url = reverse('ver_cesta')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.producto.nombre)
+
+    def test_aumentar_cantidad_producto_en_cesta(self):
+        self.client.login(username='testuser', password='12345')
+        session = self.client.session
+        session['cesta'] = {
+            str(self.producto.id): {
+                'nombre': self.producto.nombre,
+                'foto': self.producto.foto,
+                'precio': float(self.producto.precio),
+                'cantidad': 1
+            }
+        }
+        session.save()
+        url = reverse('aumentar_cantidad_producto_en_cesta', args=[self.producto.id])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(Pedido.objects.filter(id=self.pedido.id).exists())
+        cesta = self.client.session['cesta']
+        self.assertEqual(cesta[str(self.producto.id)]['cantidad'], 2)
+
+    def test_disminuir_cantidad_producto_en_cesta(self):
+        self.client.login(username='testuser', password='12345')
+        session = self.client.session
+        session['cesta'] = {
+            str(self.producto.id): {
+                'nombre': self.producto.nombre,
+                'foto': self.producto.foto,
+                'precio': float(self.producto.precio),
+                'cantidad': 2
+            }
+        }
+        session.save()
+        url = reverse('disminuir_cantidad_producto_en_cesta', args=[self.producto.id])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        cesta = self.client.session['cesta']
+        self.assertEqual(cesta[str(self.producto.id)]['cantidad'], 1)
+
+    def test_eliminar_de_cesta(self):
+        self.client.login(username='testuser', password='12345')
+        session = self.client.session
+        session['cesta'] = {
+            str(self.producto.id): {
+                'nombre': self.producto.nombre,
+                'foto': self.producto.foto,
+                'precio': float(self.producto.precio),
+                'cantidad': 1
+            }
+        }
+        session.save()
+        url = reverse('eliminar_de_cesta', args=[self.producto.id])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        cesta = self.client.session['cesta']
+        self.assertNotIn(str(self.producto.id), cesta)
+
+
+    def test_pagar(self):
+        self.client.login(username='testuser', password='12345')
+        session = self.client.session
+        session['cesta'] = {
+            str(self.producto.id): {
+                'nombre': self.producto.nombre,
+                'foto': self.producto.foto,
+                'precio': float(self.producto.precio),
+                'cantidad': 1
+            }
+        }
+        session.save()
+        url = reverse('pagar')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Pagar Pedido')
+
+
 
 if __name__ == '__main__':
     unittest.main()

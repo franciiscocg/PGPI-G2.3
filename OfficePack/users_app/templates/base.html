@@ -589,21 +589,21 @@
 
             <a href="/">Home</a>
 
-            <a href="/catalogo">Catálogo</a>
-            <a href="/cesta">Cesta</a>
-            <a href="/rastrear">Rastrear Pedido</a>
+            <a href="/catalogo/">Catálogo</a>
+            <a href="/cesta/">Cesta</a>
+            <a href="/rastrear/">Rastrear Pedido</a>
 
             {% if user.is_authenticated %}
                 {% if user.is_staff %}
-                    <a href="/gestionar_productos">Gestionar Productos</a>
-                    <a href="/gestionar_pedidos">Gestionar Pedidos</a>
-                    <a href="/gestionar_usuarios">Gestionar Usuarios</a>
+                    <a href="/gestionar_productos/">Gestionar Productos</a>
+                    <a href="/gestionar_pedidos/">Gestionar Pedidos</a>
+                    <a href="/gestionar_usuarios/">Gestionar Usuarios</a>
                 {% endif %}
-            <a href="/perfil">Perfil</a>
-            <a href="/logout">Logout</a>
+            <a href="/perfil/">Perfil</a>
+            <a href="/logout/">Logout</a>
             {% else %}
-            <a href="/register">Registrarse</a>
-            <a href="/login">Login</a>
+            <a href="/register/">Registrarse</a>
+            <a href="/login/">Login</a>
             {% endif %}
 
             

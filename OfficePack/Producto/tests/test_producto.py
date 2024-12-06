@@ -102,7 +102,27 @@ class ProductoViewsTest(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Producto.objects.filter(id=self.producto.id).exists())
-        
+
+    def test_gestionar_productos_view(self):
+        self.client.login(username='testuser', password='12345')
+        url = reverse('gestionar_productos')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Gestionar Productos')
+
+    def test_buscar_por_nombre_view(self):
+        url = reverse('buscar_por_nombre')
+        response = self.client.get(url, {'nombre': 'Producto Test'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Producto Test')
+
+    def test_buscar_por_nombre_gestionar_view(self):
+        self.client.login(username='testuser', password='12345')
+        url = reverse('buscar_por_nombre_gestionar')
+        response = self.client.get(url, {'nombre': 'Producto Test'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Producto Test')
+
 
 class ProductoFormTest(TestCase):
 
